@@ -1,0 +1,10 @@
+{
+  "name": "fci-bank",
+  "version": "66.0.0",
+  "description": "FCI Bank: installable mobile web app with a Node backend",
+  "main": "server.js",
+  "scripts": { "start": "node server.js" },
+  "engines": { "node": ">=18" },
+  "license": "UNLICENSED",
+  "private": true
+}

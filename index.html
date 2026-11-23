@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>FCI Bank</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>:root{--bg:#050505;--bg2:#0e0e0f;--card:#141415;--el:#1c1c1e;--tx:#fff;--tx2:#9a9a9f;--bd:#262628;--ac:#c9ccd1;--up:#2fd68b;--dn:#ff5d5d;--bad:#ff5d5d;color-scheme:dark;box-sizing:border-box}
+*{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
+html,body{background:var(--bg);color:var(--tx);font:400 15px/1.5 Manrope,system-ui,sans-serif;min-height:100%}
+#app{max-width:480px;margin:0 auto;min-height:100vh;padding:calc(14px + env(safe-area-inset-top,0px)) 18px calc(104px + env(safe-area-inset-bottom,0px))}
+#app.adm{max-width:none;padding:0}
+h1,h2,.serif{font-family:'Cormorant Garamond',Georgia,serif;font-weight:600}
+h2{font-size:28px;margin:4px 0 12px}h3{font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--tx2);margin:26px 0 10px}
+.mut{color:var(--tx2);font-size:13px}.c{text-align:center}.up{color:var(--up)}.dn{color:var(--dn)}.b{font-weight:600}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+/* buttons: one system */
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;height:52px;padding:0 18px;border:1px solid #38383b;background:var(--card);border-radius:14px;margin:10px 0;font-weight:600;font-size:14px;letter-spacing:.04em;transition:background .15s,transform .1s}
+.btn:hover{background:var(--el)}.btn:active{transform:scale(.985)}
+.btn.pri{background:linear-gradient(180deg,#f2f3f5,#bcc0c7);color:#08090a;border-color:transparent}.btn.pri:hover{filter:brightness(.95)}
+.btn.up{background:var(--up);color:#03150c;border-color:transparent}.btn.dn{background:var(--dn);color:#1a0505;border-color:transparent}
+.btn.bad{background:#2a1010;border-color:#5a2222;color:#ff8a8a}
+.btn.sm{display:inline-flex;width:auto;height:38px;padding:0 16px;margin:0;border-radius:12px;font-size:13px;letter-spacing:.02em}
+.btn:disabled{opacity:.45;pointer-events:none}
+.btn-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.btn-row .btn{margin:0}
+.lnk{background:none;border:0;color:var(--ac);font-weight:600;font-size:13px;padding:8px 4px}.lnk:hover{color:#fff}
+.lnks{display:flex;justify-content:center;gap:18px;flex-wrap:wrap;margin-top:10px}
+.eye,.ib,.bk{width:40px;height:40px;border-radius:12px;border:1px solid var(--bd);background:var(--card);display:flex;align-items:center;justify-content:center;position:relative;color:var(--ac);flex:none}
+.eye{width:36px;height:36px;color:var(--tx2)}
+input,select,textarea{width:100%;height:52px;padding:0 14px;background:var(--bg2);border:1px solid var(--bd);border-radius:14px;margin:6px 0 14px;font-size:16px}
+textarea{height:auto;padding:14px}select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,#888 50%),linear-gradient(135deg,#888 50%,transparent 50%);background-position:calc(100% - 20px) 22px,calc(100% - 15px) 22px;background-size:5px 5px;background-repeat:no-repeat}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--ac)}
+label{font-size:12px;color:var(--tx2);letter-spacing:.04em;font-weight:600}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:18px;padding:16px;margin:10px 0}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px}.row.l{justify-content:flex-start}
+.big{font:600 44px/1.05 'Cormorant Garamond',serif}
+.logo{font:600 30px 'Cormorant Garamond',serif;letter-spacing:.14em;color:var(--ac);display:flex;align-items:center;gap:10px}
+.ph{position:sticky;top:0;z-index:4;margin:-14px -18px 10px;padding:calc(14px + env(safe-area-inset-top,0px)) 18px 12px;background:#050505e6;backdrop-filter:blur(14px);display:grid;grid-template-columns:40px 1fr 40px;align-items:center}
+.pt{text-align:center;font-weight:700;font-size:16px}
+.badge{position:absolute;top:-5px;right:-5px;min-width:18px;height:18px;border-radius:9px;background:var(--dn);color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;padding:0 5px;border:2px solid var(--bg)}
+.nav{position:fixed;bottom:0;left:0;right:0;background:#0a0a0bf0;backdrop-filter:blur(16px);border-top:1px solid var(--bd);z-index:5;padding-bottom:env(safe-area-inset-bottom,0px)}
+.nav div{display:flex;max-width:480px;margin:0 auto}.nav button{flex:1;padding:10px 0 9px;background:none;border:0;color:var(--tx2);font-size:10px;letter-spacing:.05em;display:flex;flex-direction:column;align-items:center;gap:3px}
+.nav button.on{color:#fff}.nav button.on svg{stroke:var(--ac)}.nav .mid span{width:46px;height:46px;border-radius:50%;margin-top:-22px;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#f2f3f5,#a9adb4);color:#050505;border:4px solid var(--bg)}
+.li{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid #1c1c1e;cursor:pointer}.li:last-child{border:0}
+.ico{width:42px;height:42px;border-radius:14px;background:var(--el);border:1px solid var(--bd);display:flex;align-items:center;justify-content:center;flex:none;color:var(--ac)}
+.li .m{flex:1;min-width:0}.li .m div:first-child{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pos{color:var(--up)}.neg{color:#e6e6e6}
+.qa{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:18px 0 4px}.qa button{background:none;border:0;font-size:11px;color:var(--tx);display:flex;flex-direction:column;align-items:center;gap:8px;font-weight:600}
+.qa i{width:56px;height:56px;border-radius:18px;background:linear-gradient(145deg,#232326,#111);border:1px solid #333;display:flex;align-items:center;justify-content:center;color:var(--ac)}
+.pill{display:inline-flex;align-items:center;gap:4px;height:26px;padding:0 10px;border-radius:13px;font-size:12px;font-weight:600;background:#ffffff10}
+.scroll{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding:8px 2px 6px;scrollbar-width:none}.scroll::-webkit-scrollbar{display:none}.scroll>*{flex:0 0 92%;scroll-snap-align:center}
+.scroll.sm>*{flex:0 0 44%}.dots2{display:flex;gap:6px;justify-content:center;margin-top:4px}.dots2 i{width:6px;height:6px;border-radius:3px;background:#444}.dots2 i.on{width:18px;background:var(--ac)}
+.promo{border-radius:20px;padding:20px;border:1px solid #2c4a3f;background:radial-gradient(circle at 90% 0,#2f8f7255,transparent 55%),linear-gradient(135deg,#0f1f19,#0a0a0a);cursor:pointer}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}.chips.x{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}.chips.x::-webkit-scrollbar{display:none}
+.chips button{height:34px;padding:0 14px;border-radius:12px;background:var(--card);border:1px solid var(--bd);font-size:12px;font-weight:600;flex:none}.chips button.on{background:var(--ac);color:#050505;border-color:var(--ac)}
+.seg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:4px;gap:4px;margin:6px 0 14px}.seg button{height:38px;border:0;border-radius:10px;background:none;font-weight:600;font-size:13px;color:var(--tx2)}.seg button.on{background:var(--el);color:#fff;box-shadow:0 0 0 1px #3a3a3d inset}.seg button.on.g{background:var(--up);color:#03150c}.seg button.on.r{background:var(--dn);color:#1a0505}
+.presets{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}.presets button{height:38px;border-radius:12px;border:1px solid var(--bd);background:var(--card);font-weight:600;font-size:13px}
+.picker{display:flex;gap:12px;overflow-x:auto;padding:4px 0 10px;scrollbar-width:none;margin:0 -18px;padding-left:18px;padding-right:18px}.picker::-webkit-scrollbar{display:none}
+.picker button{flex:none;display:flex;flex-direction:column;align-items:center;gap:7px;background:none;border:0;color:var(--tx2);font-size:11px;font-weight:600}.picker .sw{width:70px;height:46px;border-radius:10px;border:2px solid transparent;box-shadow:0 0 0 1px #ffffff22 inset}.picker button.on{color:#fff}.picker button.on .sw{border-color:#fff}
+.bar{height:6px;background:var(--el);border-radius:6px;overflow:hidden;margin-top:10px}.bar i{display:block;height:100%;background:linear-gradient(90deg,#8a8d93,#e6e8eb)}
+.sheet{position:fixed;inset:0;background:#000b;z-index:20;display:flex;align-items:flex-end;justify-content:center}
+.sheet>div{background:var(--bg2);border:1px solid var(--bd);border-radius:24px 24px 0 0;padding:22px 20px calc(22px + env(safe-area-inset-bottom,0px));width:100%;max-width:480px;max-height:88vh;overflow:auto;animation:upk .25s}
+.sheet.mod{align-items:center;padding:20px}.sheet.mod>div{border-radius:22px;max-width:760px;max-height:90vh}
+@keyframes upk{from{transform:translateY(30px);opacity:0}}@keyframes pop{from{transform:scale(.5);opacity:0}}
+.toast{position:fixed;top:calc(12px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);background:#1c1c1ef2;backdrop-filter:blur(12px);border:1px solid #3a3a3d;padding:11px 18px;border-radius:14px;z-index:50;font-size:13px;max-width:90%;box-shadow:0 10px 30px #000a;animation:upk .25s}
+.av{width:64px;height:64px;border-radius:50%;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font:600 28px 'Cormorant Garamond',serif;background:linear-gradient(145deg,#4a4d52,#17181a);border:1px solid #555;flex:none}
+#load{position:fixed;inset:0;background:#000;z-index:99;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .6s}
+.ld{width:120px;height:2px;background:var(--el);margin-top:22px;overflow:hidden}.ld i{display:block;width:40%;height:100%;background:var(--ac);animation:ld 1.1s infinite}@keyframes ld{from{margin-left:-40%}to{margin-left:100%}}
+.pinbox{display:flex;gap:12px;justify-content:center;margin:18px 0 8px;cursor:text}.pinbox i{width:54px;height:62px;border-radius:14px;border:1px solid #3a3a3d;background:var(--card);display:flex;align-items:center;justify-content:center;font-size:26px;font-style:normal}.pinbox i.f{border-color:var(--ac)}.pinbox i.cur{border-color:#fff}
+.hid{position:absolute;opacity:0;width:1px;height:1px;left:-999px}
+.amt{display:flex;align-items:center;justify-content:center;gap:6px;margin:14px 0 6px}.amt span{font:600 40px 'Cormorant Garamond',serif;color:var(--tx2)}.amt input{width:60%;height:auto;border:0;background:none;font:600 52px 'Cormorant Garamond',serif;text-align:left;padding:0;margin:0;min-width:0}
+.cr{display:flex;align-items:center;gap:12px;padding:12px;border:1px solid var(--bd);border-radius:14px;margin:8px 0;cursor:pointer;background:var(--card)}.cr.on{border-color:var(--ac);background:#ffffff0d}
+.sw{width:46px;height:30px;border-radius:7px;flex:none;border:1px solid #fff3}
+.rowk{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid #1c1c1e;gap:14px}.rowk:last-child{border:0}.rowk span:first-child{color:var(--tx2)}.rowk span:last-child{text-align:right}
+.cap{display:flex;justify-content:space-between;align-items:center;padding:10px 4px 0;font-size:13px;color:var(--tx2)}.cap b{color:#fff;font-weight:600}
+.nd{width:9px;height:9px;border-radius:50%;background:var(--up);flex:none}
+.chk{width:84px;height:84px;border-radius:50%;margin:30px auto 14px;display:flex;align-items:center;justify-content:center;background:#2fd68b22;border:2px solid var(--up);color:var(--up);animation:pop .4s cubic-bezier(.2,1.4,.4,1)}
+/* cards */
+.pc{position:relative;aspect-ratio:1.586;border-radius:20px;padding:18px 20px;overflow:hidden;color:#eceef1;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 18px 36px #000c,inset 0 0 0 1px #ffffff1f;transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:transform .15s;cursor:pointer;user-select:none}
+.pc .shn{position:absolute;inset:0;background:linear-gradient(115deg,transparent 35%,#ffffff1c 50%,transparent 65%);background-size:250% 100%;background-position:var(--mx,100%) 0;pointer-events:none}
+.pc.obsidian{background:repeating-linear-gradient(45deg,#ffffff08 0 2px,transparent 2px 6px),linear-gradient(135deg,#1c1d20,#050505 60%,#222428)}
+.pc.onyx{background:linear-gradient(115deg,transparent 58%,#ffffff12 58% 59.2%,transparent 59.2%),linear-gradient(135deg,#151516,#000)}
+.pc.titanium{background:repeating-linear-gradient(100deg,#ffffff0a 0 1px,transparent 1px 4px),linear-gradient(135deg,#50555d,#22252a 55%,#444a52)}
+.pc.platinum{color:#17181a;background:repeating-linear-gradient(90deg,#ffffff38 0 1px,transparent 1px 3px),linear-gradient(135deg,#f4f5f7,#a7abb2 50%,#e9ebee)}
+.pc.gold{color:#2a1d05;background:repeating-linear-gradient(90deg,#ffffff22 0 1px,transparent 1px 3px),linear-gradient(135deg,#f7e6a8,#cba24a 45%,#8f6c24 75%,#ecd48f)}
+.pc.rose{color:#3a1712;background:repeating-linear-gradient(90deg,#ffffff22 0 1px,transparent 1px 3px),linear-gradient(135deg,#f7d5cd,#c98577 50%,#f0c4ba)}
+.pc.copper{color:#2b1306;background:repeating-linear-gradient(90deg,#ffffff1f 0 1px,transparent 1px 3px),linear-gradient(135deg,#f0c19a,#b86a3a 50%,#e3a77a)}
+.pc.glacier{color:#0d2433;background:radial-gradient(circle at 85% 8%,#fff 0,transparent 46%),linear-gradient(135deg,#e2f3fc,#9fcbe6)}
+.pc.emerald{background:radial-gradient(circle at 88% 0,#2f8f7288 0,transparent 48%),repeating-radial-gradient(circle at 0 100%,#ffffff0f 0 1px,transparent 1px 9px),linear-gradient(145deg,#0f3a2c,#04120d)}
+.pc.midnight{background:radial-gradient(#ffffff16 1px,transparent 1.5px) 0 0/16px 16px,radial-gradient(circle at 90% 0,#3b5bff55,transparent 52%),linear-gradient(145deg,#0a1130,#04060f)}
+.pc.ruby{background:radial-gradient(ellipse at 15% -10%,#ff8a8a55,transparent 55%),repeating-linear-gradient(135deg,#ffffff0a 0 1px,transparent 1px 6px),linear-gradient(145deg,#7a0f1f,#25040a)}
+.pc.aurora{background:radial-gradient(circle at 82% 18%,#3de0ff55,transparent 42%),radial-gradient(circle at 8% 92%,#4a5cff55,transparent 46%),linear-gradient(145deg,#10131c,#05060a)}
+.sw.obsidian{background:linear-gradient(135deg,#222428,#050505)}.sw.onyx{background:linear-gradient(135deg,#1a1a1b,#000)}.sw.titanium{background:linear-gradient(135deg,#60666e,#2a2d33)}.sw.platinum{background:linear-gradient(135deg,#f4f5f7,#a7abb2)}.sw.gold{background:linear-gradient(135deg,#f7e6a8,#8f6c24)}.sw.rose{background:linear-gradient(135deg,#f7d5cd,#c98577)}.sw.copper{background:linear-gradient(135deg,#f0c19a,#b86a3a)}.sw.glacier{background:linear-gradient(135deg,#e2f3fc,#9fcbe6)}.sw.emerald{background:linear-gradient(135deg,#1f6b53,#04120d)}.sw.midnight{background:linear-gradient(135deg,#2a3fa8,#04060f)}.sw.ruby{background:linear-gradient(135deg,#b3243a,#25040a)}.sw.aurora{background:linear-gradient(135deg,#3de0ff,#10131c)}.sw.sapphire{background:linear-gradient(135deg,#3b6fe0,#050d24)}.sw.sunset{background:linear-gradient(135deg,#ff7a45,#5b2a86)}.sw.neon{background:linear-gradient(135deg,#ff2bd6,#19e6ff)}.sw.holo{background:conic-gradient(from 200deg,#ffd1f4,#c3ecff,#d9ffe0,#fff4c2,#ffd1f4)}.sw.marble{background:linear-gradient(135deg,#f6f6f4,#cfcec9)}.sw.void{background:linear-gradient(135deg,#5a2bd0,#000)}
+.pc.sapphire{background:radial-gradient(circle at 85% 0,#6ea8ff66,transparent 50%),repeating-linear-gradient(120deg,#ffffff0a 0 1px,transparent 1px 5px),linear-gradient(145deg,#12307a,#050d24)}
+.pc.sunset{background:radial-gradient(circle at 20% 110%,#ffd36677,transparent 50%),linear-gradient(135deg,#ff7a45,#e0356b 55%,#5b2a86)}
+.pc.neon{background:radial-gradient(circle at 15% 20%,#ff2bd677,transparent 40%),radial-gradient(circle at 90% 85%,#19e6ff77,transparent 42%),linear-gradient(145deg,#0b0420,#050210)}
+.pc.holo{color:#1a1830;background:conic-gradient(from 200deg at 65% 35%,#ffd1f4,#c3ecff,#d9ffe0,#fff4c2,#ffd1f4)}
+.pc.marble{color:#1b1b1d;background:repeating-linear-gradient(115deg,transparent 0 22px,#00000010 22px 23px,transparent 23px 47px),radial-gradient(circle at 80% 20%,#fff,transparent 50%),linear-gradient(135deg,#f6f6f4,#d7d6d2)}
+.pc.void{background:radial-gradient(circle at 50% 120%,#7a35ff66,transparent 55%),repeating-radial-gradient(circle at 50% 120%,#ffffff08 0 1px,transparent 1px 14px),linear-gradient(160deg,#0a0612,#000)}
+.pc.off{filter:grayscale(.85) brightness(.65)}
+.pc .r1,.pc .r2,.pc .r3{display:flex;justify-content:space-between;position:relative}.pc .r1,.pc .r2{align-items:center}.pc .r3{align-items:flex-end}
+.pc .wm{font:700 12px Manrope;letter-spacing:.35em}.pc .tier{font:700 9px/1.3 Manrope;letter-spacing:.28em;opacity:.85;text-align:right}
+.pc .num{font:600 17px/1 Manrope;letter-spacing:.16em;position:relative;text-shadow:0 1px 0 #ffffff30,0 -1px 0 #00000060}
+.pc small{font-size:8px;letter-spacing:.2em;opacity:.65;display:block;font-weight:600;margin-bottom:2px}.pc .r3 div{font-size:11.5px;letter-spacing:.08em;font-weight:600}
+.net{display:flex}.net i{width:26px;height:26px;border-radius:50%;border:2px solid currentColor;opacity:.75}.net i+i{margin-left:-11px}
+.stamp{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-12deg);border:2px solid currentColor;padding:2px 14px;letter-spacing:.3em;font-weight:700;font-size:15px;background:#0006;color:#fff}
+/* trading */
+.cvw{position:relative;margin:0 -18px}canvas{width:100%;height:330px;display:block;touch-action:pan-y}
+.tfb{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:4px;margin:6px 0 10px}.tfb button{height:34px;background:none;border:0;border-radius:10px;color:var(--tx2);font-weight:600;font-size:13px}.tfb button.on{background:var(--el);color:#fff}
+.stat{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.stat div{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:10px 6px;text-align:center;font-size:13px;font-weight:600}.stat small{display:block;font-size:10px;color:var(--tx2);font-weight:500;letter-spacing:.06em}
+.tbar{position:fixed;left:0;right:0;bottom:0;background:#0a0a0bf2;backdrop-filter:blur(14px);border-top:1px solid var(--bd);padding:12px 18px calc(12px + env(safe-area-inset-bottom,0px));z-index:6}.tbar div{max-width:480px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:10px}.tbar .btn{margin:0}
+.lg{width:44px;height:44px;border-radius:14px;display:flex;align-items:center;justify-content:center;font:700 11px Manrope;letter-spacing:.04em;flex:none;color:#fff}
+.tape{overflow:hidden;white-space:nowrap;border:1px solid var(--bd);border-radius:12px;background:var(--card);padding:9px 0;font-size:12.5px;margin:6px 0 12px}.tape>div{display:inline-block;animation:tape 70s linear infinite}@keyframes tape{to{transform:translateX(-50%)}}
+/* admin dashboard */
+.A{display:grid;grid-template-columns:248px 1fr;min-height:100vh}
+.A aside{position:sticky;top:0;height:100vh;border-right:1px solid var(--bd);padding:22px 14px;background:#09090a;display:flex;flex-direction:column;gap:4px;overflow:auto}
+.A aside .logo{padding:0 10px 18px;font-size:24px}.A nav button{display:flex;align-items:center;gap:12px;width:100%;height:42px;padding:0 12px;border:0;background:none;border-radius:12px;color:var(--tx2);font-weight:600;font-size:14px;margin:1px 0;text-align:left}
+.A nav button:hover{background:#ffffff08;color:#fff}.A nav button.on{background:var(--el);color:#fff}.A nav .cnt{margin-left:auto;background:var(--dn);color:#fff;border-radius:10px;font-size:11px;padding:0 7px;height:18px;line-height:18px}
+.A main{padding:26px 34px 70px;max-width:1280px;width:100%}
+.A .top{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:22px}.A .top h1{font-size:34px}.A .top input{width:280px;margin:0;height:44px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:16px}.kpi{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:16px}.kpi .v{font:600 30px 'Cormorant Garamond',serif;line-height:1.1;margin-top:4px}
+.g2{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:14px}.g2 .card{margin:0}
+.tbl{width:100%;border-collapse:collapse;font-size:13px}.tbl th{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--tx2);font-weight:700;padding:10px 12px;border-bottom:1px solid var(--bd);text-align:left;white-space:nowrap}.tbl td{padding:12px;border-bottom:1px solid #1a1a1c;white-space:nowrap}.tbl tr.k:hover td{background:#ffffff06;cursor:pointer}
+.tw{background:var(--card);border:1px solid var(--bd);border-radius:16px;overflow-x:auto}
+.st{display:inline-flex;align-items:center;height:24px;padding:0 10px;border-radius:12px;font-size:11px;font-weight:700;background:#ffffff10}.st.ok{background:#2fd68b22;color:var(--up)}.st.no{background:#ff5d5d22;color:var(--dn)}.st.wa{background:#e8c15a22;color:#e8c15a}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}.fgrid .full{grid-column:1/-1}
+@media(max-width:860px){.A{grid-template-columns:1fr}.A aside{position:static;height:auto;flex-direction:row;overflow-x:auto;padding:12px;border-right:0;border-bottom:1px solid var(--bd)}.A aside .logo{display:none}.A nav{display:flex}.A nav button{width:auto;white-space:nowrap}.A main{padding:18px 16px 60px}.A .top input{width:100%}.fgrid{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style></head><body>
+<div id="load"><div class="logo" style="font-size:54px">FCI</div><div class="mut" style="letter-spacing:.3em;margin-top:18px;font-size:11px">FIRST CAPITAL INTERACTIVE</div><div class="ld"><i></i></div></div>
+<div id="app"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+// Fill these in from Supabase > Project Settings > API.
+// The anon key is designed to be public, so it is fine to commit it.
+window.FCI_CONFIG = {
+  SUPABASE_URL: 'https://vckvunanzeljnnhsnfnm.supabase.co',
+  SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZja3Z1bmFuemVsam5uaHNuZm5tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTU0NzA0MTEsImV4cCI6MjExMTA0NjQxMX0.f4W7hTd0Eoo08htY_4zwXFjYVrT8zHbMdHEFhxmcDRA'
+};
+</script>
+<script>
+// Makes the FCI app's `claude.use('db')` / `claude.use('user')` calls work on Supabase.
+(function () {
+  const cfg = window.FCI_CONFIG || {};
+  if (!window.supabase || !cfg.SUPABASE_URL || /YOUR-/.test(cfg.SUPABASE_URL)) {
+    console.error('FCI: fill in config.js with your Supabase URL and anon key.');
+    return;
+  }
+  const sb = window.supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY);
+  const T = 'docs';
+  const mk = (r) => ({ id: r.id, data: () => r.data });
+
+  // ---- live collection cache + listeners ----
+  const cache = {};      // col -> Map(id -> row)
+  const subs = {};       // col -> Set(callbacks)
+  let channel = null;
+
+  const snap = (col) => ({ docs: [...(cache[col]?.values() || [])].map(mk) });
+  const fire = (col) => subs[col]?.forEach((s) => s.ok(snap(col)));
+
+  function ensureChannel() {
+    if (channel) return;
+    channel = sb.channel('fci-docs')
+      .on('postgres_changes', { event: '*', schema: 'public', table: T }, (p) => {
+        const r = p.new && p.new.collection ? p.new : p.old;
+        if (!r || !cache[r.collection]) return;
+        if (p.eventType === 'DELETE') cache[r.collection].delete(r.id);
+        else cache[r.collection].set(r.id, r);
+        fire(r.collection);
+      })
+      .subscribe();
+  }
+
+  async function load(col) {
+    const { data, error } = await sb.from(T).select('*').eq('collection', col);
+    if (error) throw error;
+    cache[col] = new Map(data.map((r) => [r.id, r]));
+  }
+
+  function collection(col) {
+    return {
+      onSnapshot(ok, err) {
+        (subs[col] ??= new Set());
+        const s = { ok, err };
+        subs[col].add(s);
+        ensureChannel();
+        load(col).then(() => ok(snap(col))).catch((e) => err && err(e));
+        return () => subs[col].delete(s);
+      },
+      doc: (id) => docRef(col, id),
+    };
+  }
+
+  function docRef(col, id) {
+    return {
+      async get() {
+        const { data, error } = await sb.from(T).select('data').eq('collection', col).eq('id', id).maybeSingle();
+        if (error) throw error;
+        return { exists: !!data, data: () => data?.data };
+      },
+      async set(d) {
+        const { error } = await sb.from(T).upsert({ collection: col, id, data: d, updated_at: new Date().toISOString() });
+        if (error) throw error;
+        if (cache[col]) { cache[col].set(id, { collection: col, id, data: d }); fire(col); }
+      },
+      async update(patch) {
+        const { error } = await sb.rpc('merge_doc', { p_col: col, p_id: id, p_patch: patch });
+        if (error) throw error;
+        const cur = cache[col]?.get(id);
+        if (cur) { cur.data = { ...cur.data, ...patch }; fire(col); }
+      },
+      async acquire({ holder, ttlMs }) {
+        const { data, error } = await sb.rpc('acquire_lock', { p_key: id, p_holder: holder, p_ttl_ms: ttlMs });
+        if (error) throw error;
+        return { acquired: !!data };
+      },
+    };
+  }
+
+  const DB = {
+    collection,
+    doc(path) { const i = path.indexOf('/'); return docRef(path.slice(0, i), path.slice(i + 1)); },
+  };
+
+  // ---- admin sign-in (Supabase Auth, email must be in the admins table) ----
+  async function isAdmin() {
+    const { data } = await sb.auth.getSession();
+    const email = data.session?.user?.email;
+    if (!email) return false;
+    const { data: row } = await sb.from('admins').select('email').eq('email', email).maybeSingle();
+    return !!row;
+  }
+
+  function adminLogin() {
+    return new Promise((resolve) => {
+      const o = document.createElement('div');
+      o.style.cssText = 'position:fixed;inset:0;background:#000d;z-index:200;display:flex;align-items:center;justify-content:center;padding:20px';
+      o.innerHTML = `<div style="background:#0e0e0f;border:1px solid #262628;border-radius:20px;padding:24px;width:100%;max-width:360px">
+        <h2 style="font-family:'Cormorant Garamond',serif;font-size:28px;margin:0 0 12px">Admin sign in</h2>
+        <input id="ae" type="email" placeholder="Email" autocomplete="username">
+        <input id="ap" type="password" placeholder="Password" autocomplete="current-password">
+        <p id="am" style="color:#ff5d5d;font-size:13px;min-height:18px"></p>
+        <button id="ab" class="btn pri">SIGN IN</button>
+        <button id="ax" class="btn">CANCEL</button></div>`;
+      document.body.append(o);
+      o.querySelector('#ax').onclick = () => { o.remove(); resolve(false); };
+      o.querySelector('#ab').onclick = async () => {
+        const { error } = await sb.auth.signInWithPassword({ email: o.querySelector('#ae').value.trim(), password: o.querySelector('#ap').value });
+        if (error) { o.querySelector('#am').textContent = error.message; return; }
+        if (!(await isAdmin())) { o.querySelector('#am').textContent = 'This account is not an admin.'; await sb.auth.signOut(); return; }
+        o.remove(); resolve(true);
+      };
+    });
+  }
+
+  const USR = {
+    async canEdit() {
+      if (await isAdmin()) return true;
+      if (location.hash === '#admin') return adminLogin();
+      return false;
+    },
+    async can() { return true; },
+  };
+
+  // If someone opens #admin later (after load), sign in then reload.
+  addEventListener('hashchange', async () => {
+    if (location.hash === '#admin' && !(await isAdmin())) { if (await adminLogin()) location.reload(); }
+  });
+
+  window.claude = { use: async (n) => (n === 'db' ? DB : n === 'user' ? USR : null) };
+})();
+</script>
+<script>
+// ===== core =====
+let DB=null,USR=null,ADM=false,CANW=true;const got=new Set();
+const S={orders:[],users:{},ledger:[],adm:[],apps:[],appSt:{},tickets:[],replies:[],pts:[],redeem:[],ustat:{},notifs:[],set:{timeout:300,reg:true,selfDep:true,maint:false,maxTx:100000,dailyLimit:250000},audit:[]};
+let B={},HOLD={},me=null,tab='home',filt='all',q='',show=true,lastAct=Date.now(),dirty=false,view='boot',atab='overview',vPend=null,vOpen=false,stack=[],loginAt=0;const shown=new Set(),T0=Date.now();
+const $=s=>document.querySelector(s);
+const r2=n=>Math.round(n*100)/100,r4=n=>Math.round(n*1e4)/1e4;
+const R=n=>(n<0?'-':'')+'R'+Math.abs(n||0).toLocaleString('en-ZA',{minimumFractionDigits:2,maximumFractionDigits:2});
+const id=p=>p+Math.random().toString(36).slice(2,10).toUpperCase();
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fmt=t=>new Date(t).toLocaleString('en-ZA',{dateStyle:'medium',timeStyle:'short'});
+async function hash(u,p){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode('fci|'+u+'|'+p));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}
+const I={back:'M15 18l-6-6 6-6',bell:'M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0',send:'M22 2L11 13M22 2l-7 20-4-9-9-4 20-7',card:'M4 5h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2zM2 10h20M6 15h4',plus:'M12 5v14M5 12h14',swap:'M7 4L3 8l4 4M3 8h14M17 20l4-4-4-4M21 16H7',bag:'M6 7h12l1 13H5zM9 7a3 3 0 0 1 6 0',home:'M3 11l9-8 9 8M5 10v10h14V10',wallet:'M3 7h16a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM3 7V6a2 2 0 0 1 2-2h12M16 14h2',chart:'M3 3v18h18M7 15l4-4 3 3 5-6',menu:'M4 7h16M4 12h16M4 17h16',down:'M12 4v14M5 12l7 7 7-7',up:'M12 20V6M5 12l7-7 7 7',user:'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21a8 8 0 0 1 16 0',shield:'M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z',gift:'M20 12v9H4v-9M2 7h20v5H2zM12 22V7M12 7C9 7 7 3 9.5 3S12 7 12 7zM12 7c3 0 5-4 2.5-4S12 7 12 7z',search:'M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM21 21l-4-4',mic:'M12 2a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3zM19 10v1a7 7 0 0 1-14 0v-1M12 18v4',check:'M5 13l4 4L19 7',chev:'M9 6l6 6-6 6',file:'M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8zM14 3v5h5',help:'M9 9a3 3 0 1 1 4 2.8c-.7.3-1 .8-1 1.7M12 18h.01M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20z',lock:'M5 11h14v10H5zM8 11V7a4 4 0 0 1 8 0v4',tag:'M3 12V4h8l10 10-8 8z',cal:'M4 6h16v14H4zM4 10h16M8 3v4M16 3v4',star:'M12 3l2.7 5.6 6.3.9-4.5 4.4 1 6.2L12 17l-5.5 3.1 1-6.2L3 9.5l6.3-.9z',out:'M9 21H5V3h4M16 17l5-5-5-5M21 12H9',pie:'M12 3v9h9a9 9 0 1 1-9-9z',trend:'M3 17l6-6 4 4 8-8M15 7h6v6',pocket:'M4 7h16v13H4zM8 7V4h8v3'};
+const ic=(n,s=20)=>`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="${I[n]}"/></svg>`;
+const logoSvg=(s=28)=>`<svg width="${s}" height="${s}" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 34V7h13M6 20h10"/><path d="M35 14a13 13 0 1 0 0 12"/></svg>`;
+const avatar=(n,s=42)=>`<div class="av" style="width:${s}px;height:${s}px;font-size:${s*.45}px;margin:0">${esc((n||'?')[0].toUpperCase())}</div>`;
+function toast(m){const t=document.createElement('div');t.className='toast';t.textContent=m;document.body.append(t);setTimeout(()=>t.remove(),3200)}
+const U=()=>S.users[me],stOf=u=>S.ustat[u]?.st||'active',holder=u=>((u.name||'')+' '+(u.surname||'')).trim().toUpperCase();
+// ===== data layer =====
+const COLS={orders:['orders'],users:['users','map'],ledger:['ledger'],adm:['adminLedger'],apps:['apps'],appSt:['appStatus','map'],tickets:['tickets'],replies:['replies'],pts:['points'],redeem:['redeem'],ustat:['userStatus','map'],notifs:['notifs'],set:['settings','set'],audit:['audit']};
+const findCard=cid=>{for(const[u,x]of Object.entries(S.users)){const c=(x.cards||[]).find(c=>c.id===cid);if(c)return{c,u}}return{}};
+function recompute(){B={};HOLD={};
+  [...S.ledger,...S.adm].sort((a,b)=>a.at-b.at).forEach(e=>{
+    if(e.to)B[e.to]=r2((B[e.to]||0)+e.amt);if(e.from)B[e.from]=r2((B[e.from]||0)-e.amt);
+    if(e.kind==='trade'){const h=(HOLD[e.user]??={}),x=(h[e.sym]??={q:0,cost:0});
+      if(e.side==='buy'){x.q=r4(x.q+e.qty);x.cost+=e.amt}else{const a=x.q?x.cost/x.q:0;x.cost-=a*e.qty;x.q=r4(x.q-e.qty);if(x.q<=0){x.q=0;x.cost=0}}}})}
+function sub(){for(const[k,[c,t]]of Object.entries(COLS)){
+  DB.collection(c).onSnapshot(s=>{
+    if(t==='map'){const m={};s.docs.forEach(d=>m[d.id]=d.data());S[k]=m}
+    else if(t==='set'){const d=s.docs.find(x=>x.id==='main');if(d)S.set={...S.set,...d.data()}}
+    else S[k]=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.at||0)-(a.at||0));
+    if(k==='ledger'||k==='adm')recompute();
+    if(k==='notifs'&&me)S.notifs.filter(n=>n.to===me&&n.at>loginAt&&!shown.has(n.id)).forEach(n=>{shown.add(n.id);toast(n.t+' · '+n.b)});
+    got.add(k);sched()},()=>{got.add(k);sched()})}}
+function sched(){if(view==='boot'){boot2();return}if(view==='maint'){if(!S.set.maint)welcome();return}
+  const foc=['INPUT','TEXTAREA','SELECT'].includes(document.activeElement?.tagName);
+  if(view==='admin'){if($('#sh')||foc||['funds','settings'].includes(ap)){dirty=true;return}dirty=false;admin();return}
+  if(!me)return;if(S.set.maint&&!ADM){me=null;stack=[];closeSheet(true);maintV();return}if($('#sh')||foc){dirty=true;return}
+  if(view==='page'){const t=stack[stack.length-1];if(t&&t.live){dirty=false;t.fn()}return}
+  if(view==='app'){dirty=false;app()}}
+const sleep=ms=>new Promise(r=>setTimeout(r,ms)),HOLDER=id('H');
+async function lock(key){for(let i=0;i<8;i++){try{const r=await DB.doc('locks/'+key.replace(/[^\w]/g,'_')).acquire({holder:HOLDER,ttlMs:1500});if(r.acquired)return true}catch(e){return true}await sleep(250+Math.random()*250)}return false}
+async function put(col,data,docId){docId=docId||id('D');for(let i=0;i<3;i++){try{await DB.collection(col).doc(docId).set(data);return docId}catch(e){await sleep(400*(i+1))}}toast('Could not save. Check your connection and access.');return null}
+const notify=(to,t,b,k)=>put('notifs',{to,t,b,k:k||'bell',at:Date.now()});
+const logA=a=>put('audit',{a,at:Date.now()});
+function avail(key){if(key.startsWith('cc:')){const{c}=findCard(key.slice(3));return(c?.credit||0)+(B[key]||0)}return B[key]||0}
+async function post(e){
+  e.amt=r2(e.amt);if(!(e.amt>0))return'Enter an amount above zero.';
+  const cc=(e.from||'').startsWith('cc:'),own=cc?findCard(e.from.slice(3)).u:e.from;
+  if(!e.adm){if(e.amt>S.set.maxTx&&['p2p','pay','withdrawal','advance'].includes(e.kind))return'Over the per-transaction limit of '+R(S.set.maxTx)+'.';
+    if(S.users[own]&&['p2p','pay'].includes(e.kind)){const today=S.ledger.filter(t=>t.from===e.from&&['p2p','pay'].includes(t.kind)&&new Date(t.at).toDateString()===new Date().toDateString()).reduce((s,t)=>s+t.amt,0);if(today+e.amt>S.set.dailyLimit)return'Daily limit of '+R(S.set.dailyLimit)+' reached.'}}
+  if(e.from&&(cc||S.users[e.from])){if(stOf(own)!=='active')return'This account is not active.';
+    if(!await lock(e.from))return'Busy right now. Please try again.';await sleep(350);
+    if(avail(e.from)<e.amt)return cc?'Not enough available credit.':'Insufficient funds.'}
+  e.at=Date.now();const i=await put(e.adm?'adminLedger':'ledger',e,id('TX'));if(!i)return'Could not save.';e.id=i;
+  if(e.kind==='p2p'){notify(e.to,'Money received',R(e.amt)+' from '+S.users[e.from]?.name+(e.ref?' · '+e.ref:''),'down');notify(e.from,'Money sent',R(e.amt)+' to '+S.users[e.to]?.name,'send')}
+  else if(e.kind==='pay')notify(e.user||me,'Payment successful',R(e.amt)+' to '+(e.payee||'merchant'),'card');
+  else if(e.kind==='deposit'&&e.adm&&S.users[e.to])notify(e.to,'Money received',R(e.amt)+' · '+e.desc,'down');
+  return e}
+const bal=u=>B[u]||0,pockets=u=>(S.users[u]?.pockets||[]),pkBal=(u,p)=>B['pk:'+p]||0;
+const myKeys=()=>new Set([me,...(U()?.cards||[]).filter(c=>c.type==='Credit').map(c=>'cc:'+c.id),...pockets(me).map(p=>'pk:'+p.id)]);
+const myTx=()=>{const k=myKeys();return[...S.ledger,...S.adm].filter(t=>k.has(t.from)||k.has(t.to)).sort((a,b)=>b.at-a.at)};
+// ===== market engine =====
+const SYMS={};[['AURM','Aurum Metals',182,.5,1.3,'#b8913a','Stocks',.0004],['NVLX','Novalux Systems',428,.8,2.1,'#3b6df0','Stocks',.0004],['HLXB','Helix Biotech',96,1.1,.4,'#1f9d76','Stocks',.0005],['ORBT','Orbit Aerospace',61,.9,4.2,'#7a52d6','Stocks',.0005],['MRDN','Meridian Energy',74,.6,5.5,'#d6663a','Stocks',.0004],['QNTM','Quantum Labs',134,1.2,6.1,'#18a6c9','Stocks',.0005],['VLTC','Voltcoin',2840,1.8,3.3,'#e0a21b','Crypto',.0012],['ETHN','Etherion',1620,1.6,7.2,'#6b7cff','Crypto',.0012],['SOLR','Solaris',94,2.2,8.4,'#a35cf0','Crypto',.0015],['GLDX','Gold Futures',2310,.35,9.1,'#d8b45a','Commodities',.0006],['CRDX','Crude Oil',78.4,.7,2.7,'#6a6a6a','Commodities',.0007],['FCI50','FCI 50 Index',5240,.3,1.9,'#2d8f6f','Indices',.0002],['NXG','Nexus 100',18400,.4,5.0,'#3a7bd5','Indices',.0002]].forEach(([s,n,p,v,ph,col,cat,sp])=>SYMS[s]={s,n,p,v,ph,col,cat,sp});
+const nz=(k,i)=>{const x=Math.sin(i*12.9898+k*78.233)*43758.5453;return x-Math.floor(x)-.5};
+function px(o,t){const b=t/3,i=Math.floor(b),f=b-i,sm=f*f*(3-2*f),n=nz(o.ph,i)*(1-sm)+nz(o.ph,i+1)*sm,b2=t/37,j=Math.floor(b2),f2=b2-j,s2=f2*f2*(3-2*f2),n2=nz(o.ph+9,j)*(1-s2)+nz(o.ph+9,j+1)*s2;
+  const L=o.v*.06*(Math.sin(t/9000+o.ph)+.6*Math.sin(t/2300+o.ph*2)+.3*Math.sin(t/410+o.ph*3))+.004*n*o.v+.009*n2*o.v+.1*o.v*Math.sin(t/604800+o.ph*1.7)+.07*o.v*Math.sin(t/2505600+o.ph*.9);return +(o.p*Math.exp(L)).toFixed(o.p>1000?1:2)}
+const P=s=>px(SYMS[s],Date.now()/1000),chg=s=>{const o=SYMS[s],n=Date.now()/1000;return(px(o,n)/px(o,n-86400)-1)*100};
+const holdVal=u=>Object.entries(HOLD[u]||{}).reduce((s,[k,x])=>s+x.q*P(k),0),pkTotal=u=>pockets(u).reduce((s,p)=>s+pkBal(u,p.id),0),netWorth=u=>bal(u)+pkTotal(u)+holdVal(u);
+const BOTS=[['Mara Quinn',9400,{NVLX:18,AURM:35}],['Theo Marsh',42000,{VLTC:4.2,ORBT:60}],['Imani Cole',15300,{HLXB:90,MRDN:70}],['Rafe Donnelly',61000,{NVLX:60,VLTC:8}],['Sienna Park',7600,{AURM:20}],['Kai Ndlovu',28800,{ORBT:120,MRDN:90,HLXB:40}],['Lena Voss',3100,{VLTC:1.5}],['Dario Fonte',51200,{AURM:150,NVLX:25}]];
+const botWorth=b=>b[1]+Object.entries(b[2]).reduce((s,[k,q])=>s+q*P(k),0);
+const spark=(pts,w=90,h=30,col)=>{const lo=Math.min(...pts),hi=Math.max(...pts),c=col||(pts[pts.length-1]>=pts[0]?'#2fd68b':'#ff5d5d');return`<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}"><polyline fill="none" stroke="${c}" stroke-width="1.6" stroke-linejoin="round" points="${pts.map((v,i)=>(i/(pts.length-1)*w).toFixed(1)+','+(h-2-(v-lo)/(hi-lo||1)*(h-4)).toFixed(1)).join(' ')}"/></svg>`};
+const symSpark=(s,w,h)=>{const o=SYMS[s],n=Date.now()/1000;return spark(Array.from({length:30},(_,i)=>px(o,n-86400+86400*i/29)),w,h)};
+const SPR=s=>SYMS[s].sp,ASK=s=>+(P(s)*(1+SPR(s))).toFixed(SYMS[s].p>1000?1:2),BID=s=>+(P(s)*(1-SPR(s))).toFixed(SYMS[s].p>1000?1:2);
+// ===== boot & framework =====
+async function init(){
+  try{if(window.claude?.use){DB=await claude.use('db');USR=await claude.use('user')}}catch(e){}
+  if(!DB){render(`<div class="c" style="padding-top:80px"><div class="logo" style="justify-content:center;font-size:48px">${logoSvg(44)}FCI</div><h2 style="margin-top:30px">Sign in to connect</h2><p class="mut">FCI Bank syncs through the shared link. Open it while signed in to claude.ai.</p></div>`);hideLoad();return}
+  try{ADM=!!(await USR?.canEdit());CANW=(await USR?.can('data.write'))!==false}catch(e){}
+  sub();setTimeout(boot2,6000);
+  addEventListener('hashchange',()=>{if(view==='boot')return;if(location.hash==='#admin')admEnter();else if(view==='admin'||view==='denied')welcome()})}
+function boot2(){if(view!=='boot')return;if(!(got.has('users')&&got.has('ledger')&&got.has('notifs'))&&Date.now()-T0<6000)return;if(location.hash==='#admin')admEnter();else{welcome();hideLoad()}}
+function hideLoad(){setTimeout(()=>{const l=$('#load');if(l){l.style.opacity=0;setTimeout(()=>l.remove(),600)}},Math.max(0,1300-(Date.now()-T0)))}
+function render(h,keep){const y=window.scrollY;$('#app').className=view==='admin'?'adm':'';$('#app').innerHTML=h;window.scrollTo(0,keep?y:0)}
+function sheet(h,noClose){closeSheet(true);const s=document.createElement('div');s.className='sheet';s.id='sh';s.innerHTML='<div>'+h+(noClose?'':'<button class="btn" onclick="closeSheet()">CLOSE</button>')+'</div>';s.onclick=e=>{if(e.target===s)closeSheet()};document.body.append(s)}
+function closeSheet(quiet){const s=$('#sh');if(s)s.remove();vOpen=false;if(!quiet&&dirty)sched()}
+function ask(title,label,val,cb,type='text'){sheet(`<h2>${title}</h2><label>${label}</label><input id="ak" type="${type}" ${type==='number'?'inputmode="decimal"':''} value="${esc(val??'')}"><button id="akb" class="btn pri">SAVE</button>`);setTimeout(()=>{const i=$('#ak');i.focus();$('#akb').onclick=()=>{const v=i.value;closeSheet(true);cb(v)};i.onkeydown=e=>{if(e.key==='Enter')$('#akb').click()}},30)}
+function sure(msg,cb,label='CONFIRM',bad){sheet(`<h2>${msg}</h2><button id="sb" class="btn ${bad?'bad':'pri'}">${label}</button>`);$('#sb').onclick=()=>{closeSheet(true);cb()}}
+function shell(title,body,o={}){render(`<div class="ph"><button class="bk" onclick="pop()" aria-label="Back">${ic('back')}</button><div class="pt">${title}</div><div>${o.right||''}</div></div>${body}${o.foot||''}`,o.keep)}
+function push(fn,live){stack.push({fn,live});view='page';fn()}
+function pop(){stack.pop();if(stack.length){view='page';stack[stack.length-1].fn()}else{view='app';app()}}
+function refresh(){const t=stack[stack.length-1];if(t)t.fn();else app()}
+function setTab(t){stack=[];tab=t;view='app';app()}
+const LIVE=['notif','sym','cardd','trade'];
+function go(n,a,b){push(()=>PG[n](a,b),LIVE.includes(n))}
+const num=v=>parseFloat(String(v).replace(',','.').replace(/[^\d.]/g,''))||0;
+const amtIn=(i,v='')=>`<div class="amt"><span>R</span><input id="${i}" type="text" inputmode="decimal" placeholder="0.00" value="${v}" autocomplete="off"></div>`;
+// ===== welcome / auth =====
+const lastU=()=>localStorage.getItem('fci_last'),lastN=()=>localStorage.getItem('fci_name');
+function maintV(){view='maint';render(`<div class="c" style="padding-top:90px"><div class="logo" style="justify-content:center;font-size:44px">${logoSvg(40)}FCI</div><h2 style="margin-top:28px">Back shortly</h2><p class="mut">FCI Bank is being updated. Please try again in a little while.</p></div>`)}
+function welcome(){me=null;if(S.set.maint&&!ADM)return maintV();view='welcome';stack=[];const n=lastN();render(`<div class="c" style="padding-top:60px"><div class="logo" style="justify-content:center;font-size:60px">${logoSvg(54)}FCI</div><div class="mut" style="letter-spacing:.5em;font-size:11px;margin-top:2px">BANK</div>
+<h1 style="font-size:36px;margin-top:44px">Welcome to FCI</h1><p class="mut">Your financial world. Reimagined.</p>
+<div style="margin-top:40px"><button class="btn pri" onclick="loginV()">${n?'LOGIN AS '+esc(n.toUpperCase()):'LOGIN'}</button><button class="btn" onclick="applyP()">APPLY</button><button class="btn" onclick="contactP()">CONTACT</button></div>
+${CANW?'':'<p class="mut" style="color:var(--dn)">View-only access: ask the owner to share this page as Contributor.</p>'}
+<p class="mut" style="margin-top:30px">Version 65.0</p><p class="mut" style="margin-top:14px;font-size:11px">© FCI BANK · Simulator for friends</p></div>`)}
+function loginV(msg=''){view='login';const n=lastN();
+ render(`<button class="bk" onclick="welcome()" aria-label="Back">${ic('back')}</button><div class="c" style="margin-top:24px">${n?`${avatar(n,76)}<h2>Welcome back, ${esc(n)}</h2>`:`<div class="logo" style="justify-content:center">${logoSvg()}FCI</div><h2 style="margin-top:20px">Welcome back.</h2><input id="un" placeholder="Username" autocapitalize="none" autocomplete="username" style="text-align:center" onkeydown="if(event.key==='Enter')$('#pin').focus()">`}<p class="mut">Enter your 4-digit PIN</p>
+<div class="pinbox" onclick="$('#pin').focus()">${'<i></i>'.repeat(4)}</div><input id="pin" class="hid" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="4" autocomplete="off" oninput="pinIn(this)"><p style="color:var(--dn);min-height:22px;font-size:13px">${msg}</p></div>
+<div class="lnks"><button class="lnk" onclick="forgot()">Forgot PIN?</button>${n?'<button class="lnk" onclick="localStorage.removeItem(\'fci_last\');localStorage.removeItem(\'fci_name\');loginV()">Not you?</button>':''}<button class="lnk" onclick="regV()">Create account</button></div></div>`);
+ setTimeout(()=>$(n?'#pin':'#un')?.focus(),80)}
+function pinIn(el){el.value=el.value.replace(/\D/g,'');[...document.querySelectorAll('.pinbox i')].forEach((d,i)=>{d.className=i<el.value.length?'f':i===el.value.length?'cur':'';d.textContent=i<el.value.length?'•':''});if(el.value.length===4)doLogin(el.value)}
+async function doLogin(p){const lk=JSON.parse(localStorage.getItem('fci_lock')||'{}');
+ if(Date.now()<(lk.until||0))return loginV('Too many unsuccessful attempts. Please try again later.');
+ const un=lastU()||($('#un')?.value||'').trim().toLowerCase();let u=null;try{const d=await DB.doc('users/'+un).get();u=d.exists?d.data():null}catch(e){}
+ if(u&&stOf(un)!=='active')return loginV('This account is not active. Contact support.');
+ if(u&&u.pin===await hash(un,p)){localStorage.removeItem('fci_lock');localStorage.setItem('fci_last',un);localStorage.setItem('fci_name',u.name);me=un;DB.doc('users/'+un).update({seen:Date.now()}).catch(()=>{});loginAt=Date.now();lastAct=Date.now();tab='home';stack=[];view='app';app();return}
+ const n=(lk.n||0)+1;localStorage.setItem('fci_lock',JSON.stringify(n>=3?{n:0,until:Date.now()+60000}:{n}));
+ loginV(n>=3?'Too many unsuccessful attempts. Please try again later.':`Incorrect details. ${3-n} attempt(s) left.`)}
+function forgot(){sheet(`<h2>Recover your PIN</h2><label>Username</label><input id="ru" value="${esc(lastU()||'')}" autocapitalize="none"><label>Recovery word</label><input id="rw" autocapitalize="none"><label>New 4-digit PIN</label><input id="rp" type="password" inputmode="numeric" maxlength="4"><button class="btn pri" onclick="doRec()">RESET PIN</button>`)}
+async function doRec(){const u=$('#ru').value.trim().toLowerCase();let us=null;try{const d=await DB.doc('users/'+u).get();us=d.exists?d.data():null}catch(e){}
+ if(!us||us.rec!==await hash(u,$('#rw').value.trim().toLowerCase())||!/^\d{4}$/.test($('#rp').value))return toast('Details do not match.');
+ await DB.doc('users/'+u).update({pin:await hash(u,$('#rp').value)});closeSheet();toast('PIN updated. Please log in.')}
+const CL={obsidian:50000,onyx:40000,titanium:30000,platinum:15000,gold:25000,rose:12000,copper:12000,glacier:10000,emerald:10000,midnight:20000,ruby:18000,aurora:20000,sapphire:22000,sunset:15000,neon:20000,holo:18000,marble:14000,void:45000},STYLES=['Obsidian','Onyx','Titanium','Platinum','Gold','Rose','Copper','Glacier','Emerald','Midnight','Ruby','Aurora','Sapphire','Sunset','Neon','Holo','Marble','Void'];
+const picker=(cur,fn)=>`<div class="picker">${STYLES.map(s=>`<button class="${s===cur?'on':''}" data-s="${s}" onclick="${fn(s)}"><div class="sw ${s.toLowerCase()}"></div>${s}</button>`).join('')}</div>`;
+function newCard(style,nick,type){const y=29+Math.floor(Math.random()*4),m=1+Math.floor(Math.random()*12),c={id:id('C'),nick,type,style,num:(type==='Credit'?'8':'9')+Array.from({length:15},()=>Math.floor(Math.random()*10)).join(''),cvv:String(Math.floor(100+Math.random()*900)),exp:String(m).padStart(2,'0')+'/'+y,st:'Active',limit:5000,at:Date.now()};if(type==='Credit')c.credit=CL[style.toLowerCase()]||10000;return c}
+function regV(){if(!S.set.reg)return toast('Registration is currently closed.');if(!CANW)return toast('You have view-only access.');view='reg';
+ render(`<button class="bk" onclick="loginV()" aria-label="Back">${ic('back')}</button><h2 style="margin-top:14px">Open an account</h2><p class="mut">Use your real first name and surname. They appear on your cards.</p>
+<label>Legal first name</label><input id="fn" autocomplete="given-name"><label>Surname</label><input id="sn" autocomplete="family-name"><label>Username (only entered once, this device remembers it)</label><input id="un" autocapitalize="none">
+<label>Account type</label><select id="at"><option>Personal Account</option><option>Premium Account</option><option>Student Account</option><option>Savings Account</option></select>
+<label>First card design</label>${picker('Obsidian',s=>`document.querySelectorAll('[data-s]').forEach(b=>b.classList.remove('on'));this.classList.add('on')`)}<label>Recovery word (for PIN reset)</label><input id="rw" autocapitalize="none"><label>Four-digit PIN</label><input id="p1" type="password" inputmode="numeric" maxlength="4"><label>Confirm PIN</label><input id="p2" type="password" inputmode="numeric" maxlength="4">
+<p class="mut">Please remember your login details. You will need them to access your account.</p><button class="btn pri" onclick="doReg()">CREATE ACCOUNT</button>`)}
+async function doReg(){const g=i=>$('#'+i).value.trim(),u=g('un').toLowerCase(),style=document.querySelector('[data-s].on').dataset.s;
+ if(!g('fn')||!g('sn'))return toast('Enter your first name and surname.');
+ if(!/^[a-z0-9_]{3,20}$/.test(u))return toast('Username: 3–20 letters, numbers or _');
+ if((await DB.doc('users/'+u).get()).exists)return toast('That username is taken.');
+ if(!/^\d{4}$/.test($('#p1').value)||$('#p1').value!==$('#p2').value)return toast('PINs must match and be 4 digits.');
+ if(g('rw').length<3)return toast('Set a recovery word.');
+ const ok=await put('users',{name:g('fn'),surname:g('sn'),type:$('#at').value,style,acct:'FCI-'+Math.floor(1e7+Math.random()*9e7),pin:await hash(u,$('#p1').value),rec:await hash(u,g('rw').toLowerCase()),joined:Date.now(),seen:Date.now(),pockets:[],cards:[newCard(style,'Main card','Debit')]},u);
+ if(!ok)return;localStorage.setItem('fci_last',u);localStorage.setItem('fci_name',g('fn'));me=u;loginAt=Date.now();lastAct=Date.now();tab='home';logA('User registered: '+u);view='app';app();toast('Account created')}
+// ===== apply / contact (pages) =====
+const PROD={Accounts:['Personal Account','Premium Account','Student Account','Savings Account'],Cards:['Virtual Debit Card','Premium Debit Card','Credit Card'],Lending:['Personal Loan','Short-Term Loan'],Investments:['Investment Portfolio','Wealth Portfolio','Savings Plan'],Protection:['Insurance','Funeral Cover']};
+function applyP(){const f=()=>shell('Apply',Object.entries(PROD).map(([c,l])=>`<h3>${c}</h3><div class="card" style="padding:4px 16px">`+l.map(p=>`<div class="li" onclick="go('applyf','${c}','${p}')"><div class="m"><div>${p}</div></div>${ic('chev')}</div>`).join('')+'</div>').join(''));if(me)push(f);else{stack=[{fn:f}];view='page';f()}}
+function applyf(c,p){shell(p,`<p class="mut">${c} application. No real documents or ID numbers are needed.</p><label>Your name</label><input id="an" value="${me?esc(U().name+' '+(U().surname||'')):''}"><label>Amount or option you want</label><input id="ao"><label>Notes</label><textarea id="ano" rows="3"></textarea><button class="btn pri" onclick="subApp('${c}','${p}')">SUBMIT APPLICATION</button>`)}
+async function subApp(c,p){if(!$('#an').value.trim())return toast('Enter your name.');if(!CANW)return toast('View-only access.');
+ if(await put('apps',{cat:c,prod:p,name:$('#an').value,user:me||null,opt:$('#ao').value,note:$('#ano').value,at:Date.now()})){if(me)notify(me,'Application submitted',p,'file');toast('Application submitted');pop();pop()}}
+const CATS=['Customer Service','Fraud Report','Card Queries','ATM Queries','Credit Applications','Document Centre','MyWorld Customers','Collections','Debt Counselling','Website Support','General Enquiries'];
+function contactP(){const f=()=>shell('Contact FCI',`<p class="mut">Choose a category and we'll get back to you.</p><div class="card" style="padding:4px 16px">${CATS.map(c=>`<div class="li" onclick="go('ticketf','${c}')"><div class="ico">${ic('help')}</div><div class="m"><div>${c}</div></div>${ic('chev')}</div>`).join('')}</div>`);if(me)push(f);else{stack=[{fn:f}];view='page';f()}}
+function ticketf(c){shell(c,`<label>Subject</label><input id="ts"><label>Message</label><textarea id="tm" rows="5"></textarea><button class="btn pri" onclick="subTicket('${c}')">SUBMIT TICKET</button>`)}
+async function subTicket(c){if(!$('#ts').value.trim()||!$('#tm').value.trim())return toast('Add a subject and message.');if(!CANW)return toast('View-only access.');
+ if(await put('tickets',{cat:c,user:me||null,sub:$('#ts').value,msg:$('#tm').value,at:Date.now()})){toast('Ticket submitted');pop();pop()}}
+// ===== shell: tabs =====
+const bellBtn=()=>{const n=unread();return`<button class="ib" onclick="openNotif()" aria-label="Notifications">${ic('bell')}${n?`<span class="badge">${n>9?'9+':n}</span>`:''}</button>`};
+const unread=()=>S.notifs.filter(n=>n.to===me&&n.at>(+localStorage.getItem('fci_seen_'+me)||0)).length;
+let NS=0;function openNotif(){NS=+localStorage.getItem('fci_seen_'+me)||0;localStorage.setItem('fci_seen_'+me,Date.now());go('notif')}
+function app(){view='app';closeSheet(true);if(!U())return welcome();
+ const nav=[['home','Home','home'],['acc','Accounts','wallet'],['pay','Pay','send'],['trade','Trade','chart'],['cards','Cards','card'],['menu','Menu','menu']];
+ render({home,acc,pay,trade:tradeV,cards:cardsV,menu}[tab]()+`<nav class="nav"><div>${nav.map(([k,l,i])=>`<button class="${tab===k?'on':''} ${k==='pay'?'mid':''}" onclick="setTab('${k}')">${k==='pay'?`<span>${ic(i,22)}</span>`:ic(i,22)}${l}</button>`).join('')}</div></nav>`,true)}
+// ===== cards =====
+const grp=n=>n.replace(/(\d{4})(?=\d)/g,'$1 ');
+const chip='<svg width="38" height="30" viewBox="0 0 38 30"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ecdcaa"/><stop offset="1" stop-color="#a18c58"/></linearGradient></defs><rect x="1" y="1" width="36" height="28" rx="6" fill="url(#g)" stroke="#0004"/><path d="M1 10h12M1 20h12M25 10h12M25 20h12M13 1v28M25 1v28M13 15h12" stroke="#0005" fill="none"/></svg>';
+const nfc='<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M7 5a10 10 0 0 1 0 14M11 7a7 7 0 0 1 0 10M15 9a4 4 0 0 1 0 6"/></svg>';
+const cardVal=c=>c.type==='Credit'?avail('cc:'+c.id):bal(me);
+function card(c,u,o={}){const st=(c.style||'Obsidian').toLowerCase(),cr=c.type==='Credit';
+ return`<div class="pc ${st} ${c.st!=='Active'?'off':''}" ${o.noclick?'':`onclick="go('cardd','${c.id}')"`}><div class="shn"></div>
+<div class="r1"><span style="display:flex;align-items:center;gap:8px">${logoSvg(22)}<span class="wm">FCI</span></span><span class="tier">${st.toUpperCase()}<br>${cr?'CREDIT':'DEBIT'}</span></div>
+<div class="r2">${chip}${nfc}</div>
+<div class="num">${o.reveal?grp(c.num):'•••• •••• •••• '+c.num.slice(-4)}</div>
+<div class="r3"><div><small>CARDHOLDER</small>${esc(holder(u))}</div><div><small>VALID THRU</small>${c.exp}</div><div class="net"><i></i><i></i></div></div>${c.st!=='Active'?`<div class="stamp">${c.st.toUpperCase()}</div>`:''}</div>`}
+const cap=c=>`<div class="cap"><span>${esc(c.nick)} · ${c.type==='Credit'?'Available credit':'Available balance'}</span><b>${show?R(cardVal(c)):'R ••••'}</b></div>`;
+document.addEventListener('pointermove',e=>{const c=e.target.closest?.('.pc');if(!c)return;const r=c.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;c.style.setProperty('--ry',x*10+'deg');c.style.setProperty('--rx',-y*10+'deg');c.style.setProperty('--mx',(50-x*100)+'%')});
+document.addEventListener('pointerout',e=>{const c=e.target.closest?.('.pc');if(c){c.style.setProperty('--ry','0deg');c.style.setProperty('--rx','0deg')}});
+function cardsV(){const u=U();return`<div class="row"><h2>Cards</h2><button class="btn sm pri" onclick="go('cardnew')">${ic('plus',16)} New card</button></div>${u.cards.map(c=>`<div style="margin:14px 0">${card(c,u)}${cap(c)}</div>`).join('')}`}
+let rv='';
+function cardd(cid){const u=U(),c=u.cards.find(x=>x.id===cid);if(!c)return pop();const cr=c.type==='Credit',owed=cr?-(B['cc:'+cid]||0):0,act=c.st==='Active';
+ shell(esc(c.nick),`<div style="margin:6px 0 18px">${card(c,u,{reveal:rv===cid,val:cardVal(c),noclick:true})}</div>
+<div class="qa" style="grid-template-columns:repeat(4,1fr)"><button onclick="rv=rv==='${cid}'?'':'${cid}';refresh()"><i>${ic('lock')}</i>${rv===cid?'Hide':'Details'}</button>
+${c.st==='Frozen'?`<button onclick="cardSt('${cid}','Active')"><i>${ic('check')}</i>Unfreeze</button>`:act?`<button onclick="cardSt('${cid}','Frozen')"><i>${ic('shield')}</i>Freeze</button>`:`<button onclick="cardSt('${cid}','Active')"><i>${ic('check')}</i>Activate</button>`}
+<button onclick="ask('Spending limit','Max per payment (R)',${c.limit||5000},v=>cardLim('${cid}',v),'number')"><i>${ic('tag')}</i>Limit</button><button onclick="ask('Card nickname','Nickname','${esc(c.nick)}',v=>cardNick('${cid}',v))"><i>${ic('file')}</i>Rename</button></div>
+<div class="card">${[['Type',c.type+' · '+(c.style||'Obsidian')],['Status',c.st],['Valid thru',c.exp],...(rv===cid?[['Card number',grp(c.num)],['CVV',c.cvv]]:[]),['Per-payment limit',R(c.limit||5000)],...(cr?[['Credit limit',R(c.credit)],['Used',R(owed)],['Available',R(avail('cc:'+cid))]]:[]),['Issued',new Date(c.at||u.joined).toLocaleDateString()]].map(([a,b])=>`<div class="rowk"><span>${a}</span><span>${esc(b)}</span></div>`).join('')}</div>
+${cr&&owed>0?`<button class="btn pri" onclick="ask('Repay credit card','Amount (R)',${owed},v=>repay('${cid}',v),'number')">REPAY CREDIT CARD</button>`:''}
+${c.st!=='Blocked'?`<button class="btn bad" onclick="sure('Stop this card?',()=>cardSt('${cid}','Blocked'),'STOP CARD',1)">STOP CARD</button>`:''}
+<h3>Card activity</h3>${myTx().filter(t=>t.card===cid).map(txRow).join('')||'<p class="mut">No activity on this card yet.</p>'}`)}
+async function upCards(f){const cs=U().cards.map(c=>({...c}));f(cs);await DB.doc('users/'+me).update({cards:cs}).catch(()=>toast('Could not save.'))}
+async function cardSt(i,s){await upCards(cs=>{cs.find(c=>c.id===i).st=s});notify(me,'Card '+s.toLowerCase(),'Your card is now '+s.toLowerCase(),'card');toast('Card '+s.toLowerCase())}
+async function cardNick(i,v){if(v.trim())await upCards(cs=>{cs.find(c=>c.id===i).nick=v.trim().slice(0,24)})}
+async function cardLim(i,v){if(num(v)>0){await upCards(cs=>{cs.find(c=>c.id===i).limit=num(v)});toast('Limit updated')}}
+async function repay(i,v){const a=num(v),r=await post({from:me,to:'cc:'+i,amt:a,desc:'Credit card repayment',cat:'Repayment',kind:'repay',payee:'Credit card',source:'Credit card',card:i});toast(typeof r==='string'?r:'Repayment made')}
+let nt='Debit',ns='Platinum',cnn='';
+function cardnew(){const u=U(),tmp=newCard(ns,'New card',nt);tmp.num='9999999999999999';
+ shell('New card',`<div style="margin:6px 0 16px">${card(tmp,u,{noclick:true})}</div><label>Card type</label><div class="seg">${['Debit','Credit'].map(t=>`<button class="${nt===t?'on':''}" onclick="cnn=$('#cn').value;nt='${t}';refresh()">${t}</button>`).join('')}</div>
+<label>Design</label>${picker(ns,s=>`cnn=$('#cn').value;ns='${s}';refresh()`)}
+${nt==='Credit'?`<div class="card mut">Credit limit <b style="color:#fff">${R(CL[ns.toLowerCase()])}</b>. Spend now and repay from your main account any time.</div>`:'<div class="card mut">Debit cards spend from your main account balance.</div>'}
+<label>Nickname</label><input id="cn" placeholder="e.g. Travel card" maxlength="24" value="${esc(cnn)}"><button class="btn pri" onclick="makeCard()">REQUEST CARD</button>`)}
+async function makeCard(){const n=$('#cn').value.trim()||(ns+' '+nt);const c=newCard(ns,n,nt);await upCards(cs=>cs.push(c));notify(me,'New card issued',n+' is ready to use','card');toast('Card issued');pop();go('cardd',c.id)}
+// ===== home =====
+const dayL=t=>{const d=new Date(t),n=new Date(),y=new Date(Date.now()-864e5);return d.toDateString()===n.toDateString()?'Today':d.toDateString()===y.toDateString()?'Yesterday':d.toLocaleDateString('en-ZA',{day:'numeric',month:'long'})};
+function balSeries(){let r=0;const s=[0];[...myTx()].reverse().filter(t=>t.to===me||t.from===me).forEach(t=>{r+=(t.to===me?t.amt:0)-(t.from===me?t.amt:0);s.push(r)});return s.length<2?[0,0]:s.slice(-40)}
+function home(){const u=U(),tx=myTx().slice(0,5),week=myTx().filter(t=>t.at>Date.now()-6048e5&&t.kind!=='pocket'),wk=week.reduce((s,t)=>s+((t.to===me)?t.amt:0)-((t.from===me)?t.amt:0),0),
+ spent=myTx().filter(t=>t.kind==='pay'&&new Date(t.at).getMonth()===new Date().getMonth()).reduce((s,t)=>s+t.amt,0),h=new Date().getHours(),movers=Object.keys(SYMS).sort((a,b)=>Math.abs(chg(b))-Math.abs(chg(a))).slice(0,4);
+ return`<div class="row"><div class="row l">${avatar(u.name,44)}<div><div class="mut">${h<12?'Good morning':h<18?'Good afternoon':'Good evening'}</div><div class="b" style="font-size:17px">${esc(u.name)}</div></div></div>${bellBtn()}</div>
+<div class="hero" style="margin-top:22px"><div class="row"><span class="mut">Total balance</span><button class="eye" onclick="show=!show;app()" aria-label="Toggle balance">${ic(show?'eye':'eyeoff',18)}</button></div><div class="big">${show?R(bal(me)):'R ••••••••'}</div>
+<div class="row"><span class="pill ${wk>=0?'up':'dn'}">${wk>=0?'▲':'▼'} ${R(Math.abs(wk))} this week</span>${spark(balSeries(),120,34,'#c9ccd1')}</div></div>
+<div class="scroll" style="margin-top:14px" onscroll="const i=Math.round(this.scrollLeft/this.clientWidth*1.08);this.nextElementSibling.querySelectorAll('i').forEach((d,k)=>d.classList.toggle('on',k===i))">${u.cards.map(c=>`<div>${card(c,u)}${cap(c)}</div>`).join('')}</div><div class="dots2">${u.cards.map((c,i)=>`<i class="${i?'':'on'}"></i>`).join('')}</div>
+<div class="qa"><button onclick="go('send')"><i>${ic('send')}</i>Send</button><button onclick="go('payf')"><i>${ic('card')}</i>Pay</button><button onclick="go('transfer')"><i>${ic('swap')}</i>Transfer</button><button onclick="go('buy')"><i>${ic('bag')}</i>Buy</button><button onclick="go('add')"><i>${ic('plus')}</i>Add money</button></div>
+<div class="row" style="gap:10px;margin-top:14px"><div class="card" style="flex:1;margin:0"><div class="mut">Spent this month</div><div class="b" style="font-size:20px">${R(spent)}</div></div><div class="card" style="flex:1;margin:0" onclick="setTab('trade')"><div class="mut">Investments</div><div class="b" style="font-size:20px">${R(holdVal(me))}</div></div></div>
+<div class="row"><h3>Markets</h3><button class="lnk" onclick="setTab('trade')">See all</button></div><div class="scroll sm">${movers.map(s=>`<div class="card" style="margin:0" onclick="go('sym','${s}')"><div class="row l"><div class="lg" style="background:${SYMS[s].col};width:30px;height:30px;font-size:9px;border-radius:10px">${s.slice(0,2)}</div><b>${s}</b></div><div style="margin:8px 0 4px">${symSpark(s,100,32)}</div><div class="${chg(s)>=0?'up':'dn'}" style="font-size:13px;font-weight:600">${chg(s)>=0?'+':''}${chg(s).toFixed(2)}%</div></div>`).join('')}</div>
+<div class="promo" style="margin-top:18px" onclick="go('rewards')"><div class="mut" style="letter-spacing:.2em;font-size:10px">REWARDS</div><div class="serif" style="font-size:26px;margin:4px 0">Your world. More rewards.</div><div class="mut">You have <b style="color:#fff">${pts(me)}</b> points to spend.</div></div>
+<div class="row"><h3>Recent activity</h3><button class="lnk" onclick="setTab('acc')">See all</button></div>${tx.length?tx.map(txRow).join(''):'<div class="card c mut">No activity yet. Add money to get started.</div>'}`}
+const kIcon=(t,inc)=>t.kind==='p2p'?(inc?'down':'send'):{deposit:'down',pay:'bag',trade:'chart',pocket:'pocket',advance:'card',repay:'card',reversal:'swap',withdrawal:'out'}[t.kind]||'swap';
+function txRow(t){const k=myKeys(),inc=t.kind==='advance'||(k.has(t.to)&&!k.has(t.from)),internal=t.kind==='pocket',o=inc?(S.users[t.from]?.name||t.source||'FCI'):(S.users[t.to]?.name||t.payee||'FCI');
+ return`<div class="li" onclick="go('receipt','${t.id}')"><div class="ico">${ic(kIcon(t,inc),18)}</div><div class="m"><div>${internal?esc(t.desc):(inc?'From ':'To ')+esc(o)}</div><div class="mut">${esc(t.desc)} · ${fmt(t.at)}</div></div><div class="${internal?'':inc?'pos':'neg'} b">${internal?'':inc?'+':'-'}${R(t.amt).replace('-','')}</div></div>`}
+function receipt(i){const t=[...S.ledger,...S.adm].find(x=>x.id===i);if(!t)return shell('Receipt','<p class="mut c">Loading…</p>');
+ shell('Receipt',`<div class="card c"><div class="chk" style="width:60px;height:60px;margin:6px auto 10px">${ic('check',28)}</div><div class="mut">Completed</div><div class="big">${R(t.amt)}</div></div><div class="card">${[['Transaction ID',t.id],['Date',fmt(t.at)],['From',S.users[t.from]?.name||t.source||'—'],['To',S.users[t.to]?.name||t.payee||'—'],['Category',t.cat||'—'],['Reference',t.ref||'—'],['Description',t.desc]].map(([a,b])=>`<div class="rowk"><span>${a}</span><span>${esc(b)}</span></div>`).join('')}</div><p class="mut c" style="font-size:11px">FCI Simulator receipt · not an official record</p>`)}
+// ===== accounts =====
+function acc(){const u=U();let l=myTx();const k=myKeys();
+ l=l.filter(t=>filt==='all'||(filt==='in'&&k.has(t.to)&&!k.has(t.from))||(filt==='out'&&t.kind==='p2p'&&t.from===me)||(filt==='pay'&&t.kind==='pay')||(filt==='dep'&&t.kind==='deposit')||(filt==='wd'&&t.kind==='withdrawal'));
+ if(q)l=l.filter(t=>((t.desc||'')+(t.ref||'')+t.id+(t.cat||'')).toLowerCase().includes(q.toLowerCase()));
+ let last='';const rows=l.slice(0,80).map(t=>{const d=dayL(t.at),h=d!==last?`<h3>${d}</h3>`:'';last=d;return h+txRow(t)}).join('');
+ return`<div class="row"><h2>Accounts</h2>${bellBtn()}</div><div class="card" style="background:linear-gradient(145deg,#1c1c1f,#0b0b0c)"><div class="row"><span class="mut">FCI Main Account · ${u.type}</span><button class="eye" onclick="show=!show;app()" aria-label="Toggle balance">${ic(show?'eye':'eyeoff',18)}</button></div><div class="big" style="margin:8px 0">${show?R(bal(me)):'R ••••••••'}</div>
+<div class="row"><span class="mut">${u.acct}</span><button class="lnk" onclick="navigator.clipboard?.writeText('${u.acct}');toast('Account number copied')">${ic('copy',14)} Copy</button></div><div style="margin-top:10px">${spark(balSeries(),380,50,'#c9ccd1')}</div></div>
+<div class="row"><h3>My pockets</h3><button class="btn sm pri" onclick="go('pocketnew')">${ic('plus',14)} New</button></div>
+${pockets(me).length?`<div class="scroll sm" style="scroll-snap-type:none">${pockets(me).map(p=>{const a=pkBal(me,p.id);return`<div class="card" style="margin:0;flex-basis:62%"><div class="b">${esc(p.name)}</div><div class="mut">${R(a)} of ${R(p.goal)}</div><div class="bar"><i style="width:${Math.min(100,a/p.goal*100||0)}%"></i></div><div class="btn-row" style="margin-top:12px"><button class="btn sm" style="width:100%" onclick="go('transfer','${p.id}','in')">Add</button><button class="btn sm" style="width:100%" onclick="go('transfer','${p.id}','out')">Take</button></div><div class="row" style="margin-top:4px"><button class="lnk" onclick="ask('Rename pocket','Name','${esc(p.name)}',v=>pocketRen('${p.id}',v))">Rename</button><button class="lnk" style="color:var(--dn)" onclick="sure('Delete this pocket? Any balance returns to your main account.',()=>pocketDel('${p.id}'),'DELETE',1)">Delete</button></div></div>`}).join('')}</div>`:'<div class="card c mut">No pockets yet. Create one for a goal.</div>'}
+<h3>Transaction history</h3><input placeholder="Search transactions" value="${esc(q)}" oninput="q=this.value;clearTimeout(window.qt);window.qt=setTimeout(()=>{dirty=false;app();const i=document.querySelector('input[placeholder^=Search]');i.focus();i.setSelectionRange(99,99)},300)">
+<div class="chips x">${[['all','All'],['in','Received'],['out','Sent'],['pay','Payments'],['dep','Deposits'],['wd','Withdrawals']].map(([k,t])=>`<button class="${filt===k?'on':''}" onclick="filt='${k}';app()">${t}</button>`).join('')}</div>${rows||'<div class="card c mut">No transactions match.</div>'}
+<button class="btn" onclick="go('docs')">${ic('file',16)} Documents & statement</button>`}
+function docs(){const mine=S.apps.filter(a=>a.user===me),tk=S.tickets.filter(t=>t.user===me);shell('Documents',`<p class="mut">FCI Simulator documents. Not proof of income or an official bank record.</p><h3>Account statement</h3><div class="card"><div class="rowk"><span>Account</span><span>${U().acct}</span></div><div class="rowk"><span>Balance</span><span>${R(bal(me))}</span></div></div>${myTx().slice(0,40).map(txRow).join('')||'<p class="mut">Nothing yet.</p>'}<h3>Application confirmations</h3>${mine.map(a=>`<div class="li"><div class="m"><div>${a.prod}</div></div><span class="mut">${S.appSt[a.id]?.st||'Submitted'}</span></div>`).join('')||'<p class="mut">None.</p>'}<h3>Support correspondence</h3>${tk.map(t=>`<div class="li"><div class="m"><div>${esc(t.sub)}</div>${S.replies.filter(r=>r.ticket===t.id).map(r=>`<div class="mut">FCI: ${esc(r.text)}</div>`).join('')}</div></div>`).join('')||'<p class="mut">None.</p>'}`)}
+function pocketnew(){shell('New pocket',`<div class="chips">${['Savings','New Phone','Clothes','Holiday','Emergency'].map(n=>`<button onclick="$('#pn').value='${n}'">${n}</button>`).join('')}</div><label>Pocket name</label><input id="pn"><label>Goal</label>${amtIn('pg')}<button class="btn pri" onclick="pocketAdd()">CREATE POCKET</button>`)}
+async function pocketAdd(){const n=$('#pn').value.trim(),g=num($('#pg').value);if(!n||!(g>0))return toast('Add a name and a goal.');await DB.doc('users/'+me).update({pockets:[...pockets(me),{id:id('P'),name:n,goal:g,at:Date.now()}]}).catch(()=>toast('Could not save.'));toast('Pocket created');pop()}
+async function pocketRen(pid,v){if(v.trim())await DB.doc('users/'+me).update({pockets:pockets(me).map(p=>p.id===pid?{...p,name:v.trim()}:p)})}
+async function pocketDel(pid){const a=pkBal(me,pid);if(a>0)await post({from:'pk:'+pid,to:me,amt:a,desc:'Pocket closed',cat:'Pocket',kind:'pocket',user:me});await DB.doc('users/'+me).update({pockets:pockets(me).filter(p=>p.id!==pid)})}
+// ===== pay hub & flows =====
+function pay(){const rc=[...new Set(myTx().filter(t=>t.kind==='p2p'&&t.from===me).map(t=>t.to))].slice(0,6),pp=rc.length?rc:others().slice(0,6).map(x=>x[0]);
+ return`<div class="row"><h2>Pay</h2>${bellBtn()}</div>${pp.length?`<h3>Friends</h3><div class="scroll sm" style="scroll-snap-type:none">${pp.filter(k=>S.users[k]).map(k=>`<div style="flex:0 0 72px;text-align:center;cursor:pointer" onclick="go('send','${k}')">${avatar(S.users[k].name,56).replace('margin:0','margin:0 auto')}<div class="mut" style="margin-top:6px">${esc(S.users[k].name)}</div></div>`).join('')}</div>`:''}
+<div class="card" style="padding:4px 16px;margin-top:16px">${[['send','send','Send to a friend','Instant, to any FCI user'],['payf','card','Pay a merchant','Use any of your cards'],['transfer','swap','Transfer','Between your pockets'],['add','plus','Add money','From a debit or credit card'],['buy','bag','Buy vouchers','Food, fuel, shopping'],['scheduled','cal','Scheduled payments','Coming soon']].map(([g,i,t,s])=>`<div class="li" onclick="go('${g}')"><div class="ico">${ic(i)}</div><div class="m"><div>${t}</div><div class="mut">${s}</div></div>${ic('chev')}</div>`).join('')}</div>`}
+function scheduled(){shell('Scheduled payments','<div class="card c" style="padding:40px 20px"><div class="ico" style="margin:0 auto 12px">'+ic('cal')+'</div><div class="b">Nothing scheduled</div><p class="mut">Scheduled payments are coming in a future update.</p></div>')}
+function cardPick(n,fn){const cs=U().cards.filter(c=>c.st==='Active'&&(!fn||fn(c)));if(!cs.length)return'<div class="card mut">No active card available. Activate or request a card first.</div>';
+ return`<div data-n="${n}">${cs.map((c,i)=>`<div class="cr ${i?'':'on'}" data-id="${c.id}" onclick="pickCard(this)"><div class="sw ${(c.style||'obsidian').toLowerCase()}"></div><div class="m" style="flex:1"><div class="b">${esc(c.nick)} •••• ${c.num.slice(-4)}</div><div class="mut">${c.type} · ${c.type==='Credit'?'Available '+R(avail('cc:'+c.id)):'Balance '+R(bal(me))}</div></div></div>`).join('')}</div>`}
+function pickCard(el){el.parentNode.querySelectorAll('.cr').forEach(x=>x.classList.remove('on'));el.classList.add('on')}
+const picked=n=>{const i=document.querySelector(`[data-n="${n}"] .cr.on`)?.dataset.id;return U().cards.find(c=>c.id===i)};
+const spendKey=c=>c.type==='Credit'?'cc:'+c.id:me;
+const cats=['Shopping','Food','Transport','Fuel','Entertainment','Other'];let pcat='Shopping';
+function payf(){shell('Pay a merchant',`${amtIn('pm')}<label>Recipient</label><input id="pr" placeholder="Merchant or person"><label>Pay with</label>${cardPick('pcard')}<label style="display:block;margin-top:14px">Category</label><div class="chips">${cats.map(c=>`<button class="${c===pcat?'on':''}" onclick="pcat='${c}';document.querySelectorAll('.cc').forEach(b=>b.classList.toggle('on',b.textContent==='${c}'))" ></button>`).join('').replace(/<button class="[^"]*" onclick="pcat='([^']+)'[^>]*><\/button>/g,(m,c)=>`<button class="cc ${c===pcat?'on':''}" onclick="pcat='${c}';document.querySelectorAll('.cc').forEach(b=>b.classList.toggle('on',b.textContent==='${c}'))">${c}</button>`)}</div><label>Reference</label><input id="pf"><label>Description (optional)</label><input id="pd"><button class="btn pri" onclick="payRev()">REVIEW</button>`)}
+function cardOk(c,a){if(!c)return'Choose a card.';if(c.st!=='Active')return'That card is not active.';if(a>(c.limit||5000))return'Over this card\'s per-payment limit.';return null}
+function payRev(){const a=num($('#pm').value),r=$('#pr').value.trim(),c=picked('pcard');if(!r)return toast('Enter a recipient.');if(!(a>0))return toast('Enter an amount.');const bad=cardOk(c,a);if(bad)return toast(bad);
+ const d=$('#pd').value||('Payment to '+r),ref=$('#pf').value;
+ revP('Review payment',[['To',r],['Amount',R(a)],['Card',c.nick+' •••• '+c.num.slice(-4)],['Category',pcat],['Reference',ref||'—']],'PAY '+R(a),async()=>{const t=await post({from:spendKey(c),to:null,amt:a,desc:d,cat:pcat,ref,kind:'pay',payee:r,card:c.id,user:me});if(typeof t==='string')return t;succ('Payment successful',t,'Paid to '+r)})}
+function revP(title,rows,label,fn){push(()=>shell(title,`<div class="card">${rows.map(([a,b])=>`<div class="rowk"><span>${a}</span><span>${esc(b)}</span></div>`).join('')}</div><button class="btn pri" id="rvb">${label}</button>`));$('#rvb').onclick=async()=>{$('#rvb').disabled=true;const r=await fn();if(typeof r==='string'){toast(r);$('#rvb').disabled=false}}}
+function succ(title,t,sub){stack=[{fn:()=>succP(title,t,sub),live:false}];view='page';succP(title,t,sub)}
+function succP(title,t,sub){render(`<div class="c"><div class="chk">${ic('check',40)}</div><h2>${title}</h2><div class="big">${R(t.amt)}</div><p class="mut">${esc(sub||'')}</p></div><div class="card" style="margin-top:24px">${[['Reference',t.ref||'—'],['Date',fmt(t.at)],['Transaction ID',t.id]].map(([a,b])=>`<div class="rowk"><span>${a}</span><span>${esc(b)}</span></div>`).join('')}</div><button class="btn pri" onclick="setTab(tab)">DONE</button>${t.noRcpt?'':`<button class="btn" onclick="go('receipt','${t.id}')">VIEW RECEIPT</button>`}`);confetti()}
+let selU='';
+function send(pre){selU=pre||'';shell('Send money',`<label>To</label><input id="ss" placeholder="Search friends" oninput="fp()"><div id="pl"></div>${amtIn('sa')}<label>Reference</label><input id="sf" value="Payment"><button class="btn pri" onclick="sendRev()">REVIEW</button>`);fp()}
+function fp(){const v=($('#ss')?.value||'').toLowerCase(),l=others().filter(([k,x])=>(k+x.name+(x.surname||'')).toLowerCase().includes(v)).slice(0,6);$('#pl').innerHTML=l.map(([k,x])=>`<div class="cr ${selU===k?'on':''}" onclick="selU='${k}';fp()">${avatar(x.name,38)}<div class="m" style="flex:1"><div class="b">${esc(x.name+' '+(x.surname||''))}</div><div class="mut">@${k}</div></div>${selU===k?ic('check',18):''}</div>`).join('')||'<p class="mut">No friends found yet.</p>'}
+const others=()=>Object.entries(S.users).filter(([k])=>k!==me&&stOf(k)==='active');
+function sendRev(){const to=selU,a=num($('#sa').value);if(!S.users[to])return toast('Choose a recipient.');if(!(a>0))return toast('Enter an amount.');if(a>bal(me))return toast('Insufficient funds.');const ref=$('#sf').value;
+ revP('Review transfer',[['To',S.users[to].name+' '+(S.users[to].surname||'')],['Amount',R(a)],['From','Main account'],['Reference',ref||'—']],'SEND '+R(a),async()=>{const t=await post({from:me,to,amt:a,desc:'Sent to '+S.users[to].name,cat:'Transfer',ref,kind:'p2p'});if(typeof t==='string')return t;succ('Transaction completed',t,'Sent to '+S.users[to].name)})}
+let selP='',tdir='in';
+function transfer(pid,d){const ps=pockets(me);if(!ps.length){shell('Transfer','<div class="card c" style="padding:30px"><p class="mut">Create a pocket first.</p><button class="btn pri" onclick="pop();go(\'pocketnew\')">CREATE A POCKET</button></div>');return}
+ selP=pid||selP||ps[0].id;if(d)tdir=d;shell('Transfer',`<div class="seg"><button class="${tdir==='in'?'on':''}" onclick="tdir='in';refresh()">Main → Pocket</button><button class="${tdir==='out'?'on':''}" onclick="tdir='out';refresh()">Pocket → Main</button></div><label>Pocket</label>${ps.map(p=>`<div class="cr ${selP===p.id?'on':''}" onclick="selP='${p.id}';refresh()"><div class="ico">${ic('pocket',18)}</div><div class="m" style="flex:1"><div class="b">${esc(p.name)}</div><div class="mut">${R(pkBal(me,p.id))} of ${R(p.goal)}</div></div></div>`).join('')}${amtIn('pa')}<div class="mut c">Available: ${R(tdir==='in'?bal(me):pkBal(me,selP))}</div><button class="btn pri" onclick="pocketGo()">CONFIRM</button>`)}
+async function pocketGo(){const a=num($('#pa').value),p=pockets(me).find(x=>x.id===selP);if(!(a>0))return toast('Enter an amount.');if(tdir==='out'&&pkBal(me,selP)<a)return toast('Pocket has less than that.');
+ const e=tdir==='in'?{from:me,to:'pk:'+selP}:{from:'pk:'+selP,to:me},r=await post({...e,user:me,amt:a,desc:(tdir==='in'?'To pocket: ':'From pocket: ')+p.name,cat:'Pocket',kind:'pocket'});if(typeof r==='string')return toast(r);succ('Transfer complete',r,p.name)}
+let preset=0;
+function add(){if(!S.set.selfDep)return shell('Add money','<div class="card c mut">Deposits are switched off by the administrator.</div>');
+ shell('Add money',`<label>Choose a card</label>${cardPick('acard')}${amtIn('am')}<div class="presets">${[100,500,1000,5000].map(v=>`<button onclick="$('#am').value='${v}'">R${v.toLocaleString()}</button>`).join('')}</div><p class="mut c">Debit cards top up your balance. Credit cards give a cash advance from your credit limit.</p><button class="btn pri" onclick="addRev()">REVIEW</button>`)}
+function addRev(){const a=num($('#am').value),c=picked('acard');if(!c)return toast('Choose a card.');if(!(a>0))return toast('Enter an amount.');if(a>100000)return toast('Limit is R100,000 per top-up.');const cr=c.type==='Credit';if(cr&&a>avail('cc:'+c.id))return toast('Not enough available credit.');
+ revP('Review top-up',[['Card',c.nick+' •••• '+c.num.slice(-4)],['Type',cr?'Credit cash advance':'Debit top-up'],['Amount',R(a)],['To','Main account']],'ADD '+R(a),async()=>{const t=await post(cr?{from:'cc:'+c.id,to:me,amt:a,desc:'Cash advance from '+c.nick,cat:'Deposit',kind:'advance',source:c.nick+' (credit)',card:c.id}:{from:null,to:me,amt:a,desc:'Top-up from '+c.nick,cat:'Deposit',kind:'deposit',source:c.nick+' •••• '+c.num.slice(-4),card:c.id});if(typeof t==='string')return t;succ('Money added',t,'Added to your main account')})}
+function buy(){shell('Buy',`<label>Pay with</label>${cardPick('bcard')}<h3>Vouchers</h3>${[['Food voucher',100,'bag'],['Fuel voucher',250,'tag'],['Shopping voucher',500,'bag'],['Entertainment voucher',150,'star']].map(([n,p,i])=>`<div class="li"><div class="ico">${ic(i)}</div><div class="m"><div>${n}</div><div class="mut">${R(p)}</div></div><button class="btn sm pri" onclick="buyV('${n}',${p})">Buy</button></div>`).join('')}`)}
+async function buyV(n,p){const c=picked('bcard'),bad=cardOk(c,p);if(bad)return toast(bad);const t=await post({from:spendKey(c),to:null,amt:p,desc:n,cat:'Shopping',kind:'pay',payee:'FCI Lifestyle',card:c.id,user:me});if(typeof t==='string')return toast(t);succ('Purchase complete',t,n)}
+// ===== notifications =====
+function notif(){const l=S.notifs.filter(n=>n.to===me).slice(0,60);let last='';
+ shell('Notifications',l.length?l.map(n=>{const d=dayL(n.at),h=d!==last?`<h3>${d}</h3>`:'';last=d;return h+`<div class="li" style="cursor:default"><div class="ico">${ic(I[n.k]?n.k:'bell',18)}</div><div class="m"><div>${esc(n.t)}</div><div class="mut" style="white-space:normal">${esc(n.b)} · ${new Date(n.at).toLocaleTimeString('en-ZA',{timeStyle:'short'})}</div></div>${n.at>NS?'<span class="nd"></span>':''}</div>`}).join(''):`<div class="card c" style="padding:50px 20px;margin-top:20px"><div class="ico" style="margin:0 auto 12px">${ic('bell')}</div><div class="b">You're all caught up</div><p class="mut">Money received, payments, card and account updates will appear here.</p></div>`)}
+// ===== trading =====
+let tsym=null,tf='1D',ctype='candle',ind={ma:false,boll:false,rsi:false},hov=null,tcat='All',filling=false,alerting=false,otype='market',oside='buy';
+const TF={'15m':900,'1H':3600,'1D':86400,'1W':604800,'1M':2592000,'3M':7776000},logo=s=>`<div class="lg" style="background:${SYMS[s].col}">${s.slice(0,2)}</div>`;
+const fpd=s=>SYMS[s].p>1000?0:2,fm=(s,v)=>v.toFixed(fpd(s)),watch=()=>U().watch||[],myOrders=()=>S.orders.filter(o=>o.user===me);
+const star=on=>`<svg width="20" height="20" viewBox="0 0 24 24" fill="${on?'#e8c15a':'none'}" stroke="${on?'#e8c15a':'currentColor'}" stroke-width="1.8" stroke-linejoin="round"><path d="${I.star}"/></svg>`;
+async function toggleWatch(s){const w=watch().includes(s)?watch().filter(x=>x!==s):[...watch(),s];await DB.doc('users/'+me).update({watch:w}).catch(()=>toast('Could not save.'))}
+const reserved=()=>myOrders().filter(o=>o.status==='open'&&o.side==='buy').reduce((s,o)=>s+o.qty*o.price,0);
+const freeUnits=s=>((HOLD[me]||{})[s]?.q||0)-myOrders().filter(o=>o.status==='open'&&o.side==='sell'&&o.sym===s).reduce((a,o)=>a+o.qty,0);
+function portSeries(){const tr=myTx().filter(t=>t.kind==='trade').sort((a,b)=>a.at-b.at),n=Date.now()/1000;if(!tr.length)return null;return Array.from({length:24},(_,i)=>{const t=n-86400+86400*i/23,q={};tr.forEach(x=>{if(x.at/1000<=t)q[x.sym]=(q[x.sym]||0)+(x.side==='buy'?x.qty:-x.qty)});return Object.entries(q).reduce((s,[k,v])=>s+v*px(SYMS[k],t),0)})}
+function tradeV(){const h=HOLD[me]||{},pos=Object.entries(h).filter(([,x])=>x.q>0),inv=holdVal(me),cost=pos.reduce((s,[,x])=>s+x.cost,0),pl=inv-cost,ps=portSeries(),w=watch(),
+ list=Object.values(SYMS).filter(o=>tcat==='All'||(tcat==='Watchlist'&&w.includes(o.s))||o.cat===tcat),open=myOrders().filter(o=>o.status==='open'),done=myOrders().filter(o=>o.status!=='open').slice(0,4),
+ lb=[...Object.keys(S.users).filter(u=>stOf(u)==='active').map(u=>({n:nm2(u),w:netWorth(u),me:u===me})),...BOTS.map(b=>({n:b[0],w:botWorth(b)}))].sort((a,b)=>b.w-a.w).slice(0,8),
+ alloc=[...pos.map(([s,x])=>[s,x.q*P(s),SYMS[s].col]),['Cash',bal(me),'#8a8d93']].filter(a=>a[1]>0),tot=alloc.reduce((s,a)=>s+a[1],0)||1,
+ tape=Object.keys(SYMS).map(s=>`<span style="margin-right:28px"><b>${s}</b> <span data-px="${s}">${R(P(s))}</span> <span data-chg="${s}" class="${chg(s)>=0?'up':'dn'}">${chg(s)>=0?'+':''}${chg(s).toFixed(2)}%</span></span>`).join('');
+ return`<div class="row"><h2>Trade</h2>${bellBtn()}</div><div class="tape"><div>${tape}${tape}</div></div>
+<div class="card" style="background:linear-gradient(145deg,#1b1d20,#0b0b0c)"><div class="row"><span class="mut">Portfolio value</span><span class="pill" style="background:#2fd68b22;color:var(--up)"><span class="nd" style="width:6px;height:6px"></span> Market open</span></div><div class="big" data-port>${R(inv)}</div><div class="row"><span class="pill ${pl>=0?'up':'dn'}">${pl>=0?'▲':'▼'} ${R(Math.abs(pl))} P&L</span>${ps?spark(ps,120,34):'<span class="mut">Cash ${R(bal(me))}</span>'}</div>
+<div style="display:flex;height:8px;border-radius:4px;overflow:hidden;margin-top:16px;gap:2px">${alloc.map(a=>`<i style="flex:${a[1]/tot};background:${a[2]}"></i>`).join('')}</div><div class="mut" style="margin-top:8px;display:flex;gap:12px;flex-wrap:wrap">${alloc.map(a=>`<span><i style="display:inline-block;width:8px;height:8px;border-radius:2px;background:${a[2]};margin-right:5px"></i>${a[0]} ${(a[1]/tot*100).toFixed(0)}%</span>`).join('')}</div><div class="row mut" style="margin-top:10px"><span>Cash ${R(bal(me))}</span><span>Buying power ${R(bal(me)-reserved())}</span></div></div>
+<div class="chips x" style="margin-top:14px">${['All','Watchlist','Stocks','Crypto','Commodities','Indices'].map(c=>`<button class="${tcat===c?'on':''}" onclick="tcat='${c}';app()">${c}</button>`).join('')}</div>
+<div class="card" style="padding:4px 16px;margin-top:0">${list.map(o=>{const s=o.s;return`<div class="li" onclick="go('sym','${s}')">${logo(s)}<div class="m"><div>${s}</div><div class="mut">${o.n}${h[s]?.q?' · '+h[s].q+' held':''}</div></div>${symSpark(s,56,28)}<div style="text-align:right;min-width:84px"><div class="b" data-px="${s}">${R(P(s))}</div><div data-chg="${s}" class="${chg(s)>=0?'up':'dn'}" style="font-size:12px">${chg(s)>=0?'+':''}${chg(s).toFixed(2)}%</div></div><button class="eye" style="border:0;background:none" onclick="event.stopPropagation();toggleWatch('${s}')" aria-label="Watchlist">${star(w.includes(s))}</button></div>`}).join('')||'<p class="mut c" style="padding:20px">Nothing here yet. Tap the star on a market to add it.</p>'}</div>
+${open.length?`<h3>Open orders</h3><div class="card" style="padding:4px 16px">${open.map(o=>`<div class="li" style="cursor:default">${logo(o.sym)}<div class="m"><div>${o.side==='buy'?'Buy':'Sell'} ${o.qty} ${o.sym}</div><div class="mut">${o.type} @ ${R(o.price)}</div></div><button class="btn sm" onclick="cancelOrder('${o.id}')">Cancel</button></div>`).join('')}</div>`:''}
+${pos.length?`<h3>Your positions</h3><div class="card" style="padding:4px 16px">${pos.map(([s,x])=>`<div class="li" onclick="go('sym','${s}')">${logo(s)}<div class="m"><div>${s}</div><div class="mut">${x.q} units · avg ${R(x.cost/x.q)}</div></div><div style="text-align:right"><div class="b">${R(x.q*P(s))}</div><div class="${x.q*P(s)-x.cost>=0?'up':'dn'}" style="font-size:12px">${R(x.q*P(s)-x.cost)} (${((x.q*P(s)/x.cost-1)*100).toFixed(1)}%)</div></div></div>`).join('')}</div>`:''}
+${done.length?`<h3>Order history</h3><div class="card" style="padding:4px 16px">${done.map(o=>`<div class="li" style="cursor:default">${logo(o.sym)}<div class="m"><div>${o.side==='buy'?'Buy':'Sell'} ${o.qty} ${o.sym}</div><div class="mut">${o.type} @ ${R(o.price)}</div></div><span class="pill ${o.status==='filled'?'up':''}">${o.status}</span></div>`).join('')}</div>`:''}
+<h3>Leaderboard · net worth</h3><div class="card" style="padding:4px 16px">${lb.map((r,i)=>`<div class="li" style="cursor:default;${r.me?'background:#ffffff0a;margin:0 -16px;padding:13px 16px':''}"><div style="width:22px;color:var(--tx2);font-weight:700">${i+1}</div>${avatar(r.n,36)}<div class="m"><div>${esc(r.n)}${r.me?' (you)':''}</div></div><b>${R(r.w)}</b></div>`).join('')}</div>`}
+const nm2=u=>((S.users[u].name||'')+' '+(S.users[u].surname||'')).trim();
+function obHTML(s){const o=SYMS[s],p=P(s),t=Math.floor(Date.now()/4000),sp=o.sp,sc=o.p>1000?9:o.p>200?160:700,lv=k=>Math.round((nz(o.ph+k,t+k*7)+.5)*sc+(o.p>1000?1:40)),asks=[5,4,3,2,1,0].map(k=>[p*(1+sp+k*sp*.9),lv(k+10)]),bids=[0,1,2,3,4,5].map(k=>[p*(1-sp-k*sp*.9),lv(k)]),mx=Math.max(...asks.map(a=>a[1]),...bids.map(a=>a[1])),
+ row=(a,cl)=>`<div style="position:relative;display:flex;justify-content:space-between;padding:4px 6px;font-size:12px"><i style="position:absolute;right:0;top:0;bottom:0;width:${a[1]/mx*100}%;background:${cl}22"></i><span style="position:relative;color:${cl}">${fm(s,a[0])}</span><span style="position:relative">${a[1]}</span></div>`;
+ return`<div class="row mut" style="padding:0 6px 4px;font-size:11px"><span>PRICE</span><span>SIZE</span></div>${asks.map(a=>row(a,'#ff5d5d')).join('')}<div class="row" style="padding:8px 6px;margin:4px 0;border-block:1px solid var(--bd)"><b style="font-size:16px">${fm(s,p)}</b><span class="mut">Spread ${(sp*2*100).toFixed(2)}%</span></div>${bids.map(a=>row(a,'#2fd68b')).join('')}`}
+function tapeHTML(s){const o=SYMS[s],n=Date.now()/1000;return Array.from({length:9},(_,i)=>{const t=n-i*(2.3+i*.4),pr=px(o,t),pv=px(o,t-3),sz=Math.round((nz(o.ph,Math.floor(t))+.5)*(o.p>1000?4:60)*10)/10+.1;return`<div class="row" style="padding:8px 0;border-bottom:1px solid #1c1c1e;font-size:12.5px"><span class="mut">${new Date(t*1000).toLocaleTimeString('en-ZA',{hour12:false})}</span><b class="${pr>=pv?'up':'dn'}">${fm(s,pr)}</b><span>${sz.toFixed(1)}</span></div>`}).join('')}
+function sym(s){tsym=s;const o=SYMS[s],p=P(s),c=chg(s),h=(HOLD[me]||{})[s],n=Date.now()/1000,day=Array.from({length:48},(_,i)=>px(o,n-86400+86400*i/47)),hi=Math.max(...day),lo=Math.min(...day),w=watch().includes(s),al=(U().alerts||[]).filter(a=>a.sym===s),op=myOrders().filter(x=>x.sym===s&&x.status==='open');
+ shell(s,`<div class="row" style="margin-top:6px"><div class="row l">${logo(s)}<div><b style="font-size:17px">${o.n}</b><div class="mut">${s} · ${o.cat}</div></div></div></div>
+<div style="margin:14px 0 4px"><div class="big" data-px="${s}">${R(p)}</div><span data-chg="${s}" class="pill ${c>=0?'up':'dn'}">${c>=0?'▲ +':'▼ '}${c.toFixed(2)}% · 24h</span> <span class="mut" style="margin-left:6px"><span class="nd" style="display:inline-block;width:7px;height:7px"></span> Live</span></div>
+<div class="row" style="margin:10px 0 0"><div><small class="mut">BID</small><div class="dn b" data-bid="${s}">${fm(s,BID(s))}</div></div><div style="text-align:right"><small class="mut">ASK</small><div class="up b" data-ask="${s}">${fm(s,ASK(s))}</div></div></div>
+<div class="cvw"><canvas id="cv"></canvas></div>
+<div class="tfb">${Object.keys(TF).map(k=>`<button class="${tf===k?'on':''}" onclick="tf='${k}';draw();document.querySelectorAll('.tfb button').forEach(b=>b.classList.toggle('on',b.textContent==='${k}'))">${k}</button>`).join('')}</div>
+<div class="seg"><button class="${ctype==='candle'?'on':''}" onclick="ctype='candle';refresh()">Candles</button><button class="${ctype==='line'?'on':''}" onclick="ctype='line';refresh()">Line</button></div>
+<div class="chips">${[['ma','MA'],['boll','Bollinger'],['rsi','RSI']].map(([k,l])=>`<button class="${ind[k]?'on':''}" onclick="ind.${k}=!ind.${k};refresh()">${l}</button>`).join('')}</div>
+<div class="stat"><div><small>OPEN</small>${fm(s,day[0])}</div><div><small>HIGH</small>${fm(s,hi)}</div><div><small>LOW</small>${fm(s,lo)}</div><div><small>VOL</small>${(Math.abs(nz(o.ph,Math.floor(n/3600)))*9+2).toFixed(1)}M</div></div>
+<div class="btn-row" style="margin-top:12px"><button class="btn sm" style="width:100%" onclick="toggleWatch('${s}')">${star(w)} ${w?'In watchlist':'Add to watchlist'}</button><button class="btn sm" style="width:100%" onclick="ask('Price alert','Alert me at (R)','${p}',v=>addAlert('${s}',v),'number')">${ic('bell',16)} Price alert</button></div>
+${al.length?al.map(a=>`<div class="row mut" style="margin-top:8px"><span>Alert ${a.dir} ${R(a.price)}</span><button class="lnk" onclick="rmAlert('${a.id}')">Remove</button></div>`).join(''):''}
+<h3>Your position</h3><div class="card"><div class="rowk"><span>Holding</span><span>${h&&h.q?h.q+' '+s:'None'}</span></div>${h&&h.q?`<div class="rowk"><span>Value</span><span>${R(h.q*p)}</span></div><div class="rowk"><span>Avg cost</span><span>${R(h.cost/h.q)}</span></div><div class="rowk"><span>P&L</span><span class="${p*h.q-h.cost>=0?'up':'dn'}">${R(p*h.q-h.cost)} (${((p*h.q/h.cost-1)*100).toFixed(1)}%)</span></div>`:''}<div class="rowk"><span>Buying power</span><span>${R(bal(me)-reserved())}</span></div></div>
+${op.length?`<h3>Open orders</h3><div class="card" style="padding:4px 16px">${op.map(x=>`<div class="li" style="cursor:default"><div class="m"><div>${x.side==='buy'?'Buy':'Sell'} ${x.qty}</div><div class="mut">${x.type} @ ${R(x.price)}</div></div><button class="btn sm" onclick="cancelOrder('${x.id}')">Cancel</button></div>`).join('')}</div>`:''}
+<h3>Order book</h3><div class="card" id="ob">${obHTML(s)}</div><h3>Recent trades</h3><div class="card" id="tp" style="padding:4px 16px">${tapeHTML(s)}</div>
+<h3>Recent orders</h3>${myTx().filter(t=>t.kind==='trade'&&t.sym===s).slice(0,6).map(t=>`<div class="li" style="cursor:default"><div class="m"><div>${t.side==='buy'?'Bought':'Sold'} ${t.qty}</div><div class="mut">@ ${R(t.px)} · ${fmt(t.at)}</div></div><b>${R(t.amt)}</b></div>`).join('')||'<p class="mut">No orders yet.</p>'}<div style="height:70px"></div>`,
+ {foot:`<div class="tbar"><div><button class="btn up" onclick="go('order','${s}','buy')">BUY</button><button class="btn dn" onclick="go('order','${s}','sell')">SELL</button></div></div>`});
+ const cv=$('#cv');const mv=e=>{const r=cv.getBoundingClientRect();hov=e.clientX-r.left;draw()};cv.onpointermove=mv;cv.onpointerdown=mv;cv.onpointerleave=cv.onpointerup=cv.onpointercancel=()=>{hov=null;draw()};draw()}
+function draw(){const cv=$('#cv');if(!cv||!tsym)return;const o=SYMS[tsym],W=cv.clientWidth,H=cv.clientHeight,d=devicePixelRatio||1;cv.width=W*d;cv.height=H*d;const g=cv.getContext('2d');g.scale(d,d);
+ const span=TF[tf],now=Date.now()/1000,cd=ctype==='candle',N=cd?44:150,pts=[];
+ if(cd){const w=span/N;for(let i=0;i<N;i++){const t0=now-span+i*w,a=[0,1,2,3,4,5,6].map(k=>px(o,t0+w*k/6));pts.push({t:t0+w/2,o:a[0],c:a[6],h:Math.max(...a),l:Math.min(...a),v:Math.abs(a[6]-a[0])/o.p*500+Math.abs(nz(o.ph,Math.floor(t0/w)))+.2})}}
+ else for(let i=0;i<=N;i++){const t=now-span+span*i/N;pts.push({t,c:px(o,t)})}
+ const cl=pts.map(p=>p.c),sub=ind.rsi||cd,volH=sub?56:0,padR=62,padB=22,cw=W-padR,ch=H-padB-volH-10,fp=fpd(tsym);
+ const bb=ind.boll?cl.map((_,i)=>{if(i<19)return null;const s=cl.slice(i-19,i+1),m=s.reduce((a,b)=>a+b,0)/20,sd=Math.sqrt(s.reduce((a,b)=>a+(b-m)**2,0)/20);return[m-2*sd,m,m+2*sd]}):[];
+ const lo0=Math.min(...pts.map(p=>p.l??p.c),...bb.filter(Boolean).map(b=>b[0])),hi0=Math.max(...pts.map(p=>p.h??p.c),...bb.filter(Boolean).map(b=>b[2])),pd=(hi0-lo0)*.12||1,lo=lo0-pd,hi=hi0+pd,y=v=>8+(hi-v)/(hi-lo)*ch,x=i=>8+i/(pts.length-1)*(cw-16);
+ g.font='10px Manrope';g.lineWidth=1;
+ for(let i=0;i<=4;i++){const v=hi-(hi-lo)*i/4,yy=y(v);g.strokeStyle='#ffffff0d';g.beginPath();g.moveTo(0,yy);g.lineTo(cw,yy);g.stroke();g.fillStyle='#8a8a90';g.fillText(v.toFixed(fp),cw+8,yy+3)}
+ for(let i=0;i<4;i++){const k=Math.round((pts.length-1)*(i+.5)/4),t=new Date(pts[k].t*1000),xx=x(k);g.strokeStyle='#ffffff08';g.beginPath();g.moveTo(xx,8);g.lineTo(xx,8+ch);g.stroke();g.fillStyle='#8a8a90';g.textAlign='center';g.fillText(span<=86400?t.toLocaleTimeString('en-ZA',{hour:'2-digit',minute:'2-digit'}):t.toLocaleDateString('en-ZA',{day:'numeric',month:'short'}),xx,H-6)}g.textAlign='left';
+ const upc=cl[cl.length-1]>=(pts[0].o??cl[0]),col=upc?'#2fd68b':'#ff5d5d';
+ if(ind.boll){g.beginPath();let st=false;bb.forEach((b,i)=>{if(!b)return;st?g.lineTo(x(i),y(b[2])):g.moveTo(x(i),y(b[2]));st=true});for(let i=bb.length-1;i>=0;i--)if(bb[i])g.lineTo(x(i),y(bb[i][0]));g.closePath();g.fillStyle='#7aa8ff14';g.fill();g.strokeStyle='#7aa8ff88';g.lineWidth=1;[0,2].forEach(k=>{g.beginPath();let s2=false;bb.forEach((b,i)=>{if(!b)return;s2?g.lineTo(x(i),y(b[k])):g.moveTo(x(i),y(b[k]));s2=true});g.stroke()})}
+ if(cd){const bw=Math.max(2,(cw-16)/N*.62),mv=Math.max(...pts.map(p=>p.v));pts.forEach((p,i)=>{const cc=p.c>=p.o?'#2fd68b':'#ff5d5d';g.strokeStyle=g.fillStyle=cc;g.lineWidth=1;g.beginPath();g.moveTo(x(i),y(p.h));g.lineTo(x(i),y(p.l));g.stroke();const t=y(Math.max(p.o,p.c)),b=y(Math.min(p.o,p.c));g.fillRect(x(i)-bw/2,t,bw,Math.max(1,b-t));if(!ind.rsi){g.globalAlpha=.3;g.fillRect(x(i)-bw/2,H-padB-p.v/mv*volH,bw,p.v/mv*volH);g.globalAlpha=1}})}
+ else{g.beginPath();pts.forEach((p,i)=>{const X=x(i),Y=y(p.c);if(!i)g.moveTo(X,Y);else{const qx=x(i-1),qy=y(pts[i-1].c);g.quadraticCurveTo(qx,qy,(qx+X)/2,(qy+Y)/2)}});const lx=x(pts.length-1),ly=y(cl[cl.length-1]);g.lineTo(lx,ly);g.strokeStyle=col;g.lineWidth=2;g.stroke();g.lineTo(lx,8+ch);g.lineTo(x(0),8+ch);const gr=g.createLinearGradient(0,8,0,8+ch);gr.addColorStop(0,col+'55');gr.addColorStop(1,col+'00');g.fillStyle=gr;g.fill()}
+ if(ind.ma){g.beginPath();pts.forEach((p,i)=>{const s=pts.slice(Math.max(0,i-11),i+1),a=s.reduce((q,z)=>q+z.c,0)/s.length;i?g.lineTo(x(i),y(a)):g.moveTo(x(i),y(a))});g.strokeStyle='#e8c15a';g.lineWidth=1.5;g.stroke()}
+ if(ind.rsi){const r=cl.map((_,i)=>{if(i<14)return null;let u=0,dn=0;for(let k=i-13;k<=i;k++){const df=cl[k]-cl[k-1];df>0?u+=df:dn-=df}return dn===0?100:100-100/(1+u/dn)}),ry=v=>H-padB-v/100*volH;g.strokeStyle='#ffffff14';[30,70].forEach(v=>{g.beginPath();g.moveTo(0,ry(v));g.lineTo(cw,ry(v));g.stroke();g.fillStyle='#8a8a90';g.fillText(v,cw+8,ry(v)+3)});g.beginPath();let s3=false;r.forEach((v,i)=>{if(v==null)return;s3?g.lineTo(x(i),ry(v)):g.moveTo(x(i),ry(v));s3=true});g.strokeStyle='#b58cff';g.lineWidth=1.5;g.stroke();g.fillStyle='#b58cff';g.fillText('RSI 14',8,H-padB-volH+10)}
+ const h2=(HOLD[me]||{})[tsym];if(h2&&h2.q>0){const ac=h2.cost/h2.q;if(ac>lo&&ac<hi){g.setLineDash([2,4]);g.strokeStyle='#e8c15a';g.beginPath();g.moveTo(0,y(ac));g.lineTo(cw,y(ac));g.stroke();g.setLineDash([]);g.fillStyle='#e8c15a';g.fillText('AVG '+ac.toFixed(fp),8,y(ac)-4)}}
+ const last=cl[cl.length-1],ly=y(last);g.setLineDash([3,4]);g.strokeStyle=col;g.lineWidth=1;g.beginPath();g.moveTo(0,ly);g.lineTo(cw,ly);g.stroke();g.setLineDash([]);g.fillStyle=col;g.fillRect(cw+2,ly-9,padR-2,18);g.fillStyle='#04120b';g.font='600 10px Manrope';g.fillText(last.toFixed(fp),cw+7,ly+3.5);
+ if(hov!=null){const k=Math.max(0,Math.min(pts.length-1,Math.round((hov-8)/(cw-16)*(pts.length-1)))),p=pts[k],xx=x(k),yy=y(p.c);g.setLineDash([4,4]);g.strokeStyle='#ffffff88';g.beginPath();g.moveTo(xx,8);g.lineTo(xx,8+ch);g.moveTo(0,yy);g.lineTo(cw,yy);g.stroke();g.setLineDash([]);g.fillStyle='#fff';g.fillRect(cw+2,yy-9,padR-2,18);g.fillStyle='#000';g.fillText(p.c.toFixed(fp),cw+7,yy+3.5);
+  const t=new Date(p.t*1000).toLocaleString('en-ZA',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});g.fillStyle='#fff';g.font='600 11px Manrope';g.fillText(cd?`${t}  O ${p.o.toFixed(fp)}  H ${p.h.toFixed(fp)}  L ${p.l.toFixed(fp)}  C ${p.c.toFixed(fp)}`:`${t}  ${p.c.toFixed(fp)}`,10,16)}}
+// ----- orders -----
+function order(s,sd){tsym=s;if(sd)oside=sd;const o=SYMS[s],px0=oside==='buy'?ASK(s):BID(s);
+ shell(`${oside==='buy'?'Buy':'Sell'} ${s}`,`<div class="seg"><button class="${oside==='buy'?'on g':''}" onclick="oside='buy';refresh()">Buy</button><button class="${oside==='sell'?'on r':''}" onclick="oside='sell';refresh()">Sell</button></div>
+<div class="seg">${['market','limit','stop'].map(t=>`<button class="${otype===t?'on':''}" onclick="otype='${t}';refresh()">${t[0].toUpperCase()+t.slice(1)}</button>`).join('')}</div>
+<div class="card row"><div class="row l">${logo(s)}<div><b>${o.n}</b><div class="mut">${otype==='market'?'Fills instantly at '+(oside==='buy'?'the ask':'the bid'):otype==='limit'?'Fills at your price or better':'Triggers when price reaches your stop'}</div></div></div><div style="text-align:right"><small class="mut">${oside==='buy'?'ASK':'BID'}</small><div class="b" data-${oside==='buy'?'ask':'bid'}="${s}">${fm(s,px0)}</div></div></div>
+<label>Quantity (units)</label><input id="tq" type="text" inputmode="decimal" placeholder="0" oninput="oEst()"><div class="presets" style="grid-template-columns:repeat(3,1fr)">${[25,50,100].map(v=>`<button onclick="fillQ(${v})">${v}%</button>`).join('')}</div>
+${otype!=='market'?`<label>${otype==='limit'?'Limit price (R)':'Stop price (R)'}</label><input id="tp2" type="text" inputmode="decimal" value="${px0.toFixed(fpd(s))}" oninput="oEst()">`:''}
+<div class="card"><div class="rowk"><span>Estimated total</span><span id="est">R0.00</span></div><div class="rowk"><span>${oside==='buy'?'Buying power':'Units available'}</span><span>${oside==='buy'?R(bal(me)-reserved()):freeUnits(s)}</span></div>${otype!=='market'?'<div class="rowk"><span>Duration</span><span>Good till cancelled</span></div>':''}</div>
+${otype!=='market'?'<p class="mut c">Limit and stop orders fill automatically while FCI is open on your device.</p>':''}<button class="btn ${oside==='buy'?'up':'dn'}" onclick="orderRev()">REVIEW ORDER</button>`)}
+const ordPx=()=>otype==='market'?(oside==='buy'?ASK(tsym):BID(tsym)):num($('#tp2')?.value);
+const maxQ=()=>oside==='buy'?Math.floor((bal(me)-reserved())/(ordPx()||ASK(tsym))*1e4)/1e4:freeUnits(tsym);
+function fillQ(pc){$('#tq').value=r4(Math.max(0,maxQ())*pc/100)||'';oEst()}
+function oEst(){$('#est').textContent=R(num($('#tq').value)*ordPx())}
+async function tradePost(s,side,q){const p=side==='buy'?ASK(s):BID(s),amt=r2(q*p),b={amt,desc:`${side==='buy'?'Bought':'Sold'} ${q} ${s}`,cat:'Trading',kind:'trade',user:me,sym:s,side,qty:q,px:p,payee:'FCI Markets',source:'FCI Markets'};return post(side==='buy'?{...b,from:me,to:'MARKET'}:{...b,from:'MARKET',to:me})}
+function orderRev(){const q=r4(num($('#tq').value)),s=tsym,lp=otype==='market'?null:num($('#tp2').value),pr=lp||(oside==='buy'?ASK(s):BID(s)),sd=oside,ty=otype;
+ if(!(q>0))return toast('Enter a quantity.');if(ty!=='market'&&!(lp>0))return toast('Enter a price.');
+ if(sd==='buy'&&q*pr>bal(me)-reserved())return toast('Not enough buying power.');if(sd==='sell'&&q>freeUnits(s))return toast('You do not have that many units free.');
+ if(ty==='stop'){if(sd==='buy'&&lp<=ASK(s))return toast('A buy stop must be above the current price.');if(sd==='sell'&&lp>=BID(s))return toast('A sell stop must be below the current price.')}
+ revP('Review order',[['Order',(sd==='buy'?'Buy ':'Sell ')+q+' '+s],['Type',ty[0].toUpperCase()+ty.slice(1)],[ty==='market'?'Est. price':'Trigger price',R(pr)],['Est. total',R(q*pr)]],sd.toUpperCase()+' '+s,async()=>{
+  if(ty==='market'){const t=await tradePost(s,sd,q);if(typeof t==='string')return t;succ('Order filled',t,`${sd==='buy'?'Bought':'Sold'} ${q} ${s} at ${R(t.px)}`)}
+  else{const i=await put('orders',{user:me,sym:s,side:sd,qty:q,type:ty,price:lp,status:'open',at:Date.now()});if(!i)return'Could not place order.';succ('Order placed',{amt:q*lp,ref:'Order '+i.slice(0,8),at:Date.now(),id:i,noRcpt:true},'Fills automatically when the price is reached')}})}
+const ordSave=(o,patch)=>{const{id:i,...d}=o;return put('orders',{...d,...patch},i)};
+async function cancelOrder(i){const o=S.orders.find(x=>x.id===i);if(!o||o.status!=='open')return;await ordSave(o,{status:'cancelled',doneAt:Date.now()});toast('Order cancelled')}
+async function checkOrders(){if(!me||filling)return;filling=true;try{for(const o of myOrders().filter(o=>o.status==='open')){const ask=ASK(o.sym),bid=BID(o.sym);let hit=false;
+  if(o.type==='limit')hit=o.side==='buy'?ask<=o.price:bid>=o.price;else hit=o.side==='buy'?ask>=o.price:bid<=o.price;
+  if(!hit||!await lock('ord_'+o.id))continue;const f=S.orders.find(x=>x.id===o.id);if(!f||f.status!=='open')continue;
+  const r=await tradePost(o.sym,o.side,o.qty);
+  if(typeof r==='string'){if(!/Busy/.test(r)){await ordSave(o,{status:'rejected',reason:r,doneAt:Date.now()});notify(me,'Order rejected',`${o.side} ${o.qty} ${o.sym}: ${r}`,'chart')}}
+  else{await ordSave(o,{status:'filled',fillPx:r.px,doneAt:Date.now()});notify(me,'Order filled',`${o.side==='buy'?'Bought':'Sold'} ${o.qty} ${o.sym} at ${R(r.px)}`,'chart')}}}finally{filling=false}}
+async function addAlert(s,v){const pr=num(v);if(!(pr>0))return;const a=[...(U().alerts||[]),{id:id('AL'),sym:s,dir:pr>P(s)?'above':'below',price:pr}];await DB.doc('users/'+me).update({alerts:a}).catch(()=>{});toast('Alert set at '+R(pr))}
+async function rmAlert(i){await DB.doc('users/'+me).update({alerts:(U().alerts||[]).filter(a=>a.id!==i)}).catch(()=>{})}
+async function checkAlerts(){if(!me||alerting||!U()?.alerts?.length)return;alerting=true;try{const hit=U().alerts.filter(a=>a.dir==='above'?P(a.sym)>=a.price:P(a.sym)<=a.price);if(hit.length){await DB.doc('users/'+me).update({alerts:U().alerts.filter(a=>!hit.includes(a))}).catch(()=>{});hit.forEach(a=>notify(me,'Price alert',`${a.sym} reached ${R(a.price)}`,'bell'))}}finally{alerting=false}}
+setInterval(()=>{if(!me)return;document.querySelectorAll('[data-px]').forEach(e=>e.textContent=R(P(e.dataset.px)));document.querySelectorAll('[data-bid]').forEach(e=>e.textContent=fm(e.dataset.bid,BID(e.dataset.bid)));document.querySelectorAll('[data-ask]').forEach(e=>e.textContent=fm(e.dataset.ask,ASK(e.dataset.ask)));
+ document.querySelectorAll('span[data-chg],div[data-chg]').forEach(e=>{const c=chg(e.dataset.chg);if(e.classList.contains('pill'))e.className='pill '+(c>=0?'up':'dn'),e.textContent=(c>=0?'▲ +':'▼ ')+c.toFixed(2)+'% · 24h';else{e.textContent=(c>=0?'+':'')+c.toFixed(2)+'%';e.className=c>=0?'up':'dn'}});
+ const pe=$('[data-port]');if(pe)pe.textContent=R(holdVal(me));
+ if($('#cv')){const ob=$('#ob'),tp=$('#tp');if(ob&&tsym)ob.innerHTML=obHTML(tsym);if(tp&&tsym)tp.innerHTML=tapeHTML(tsym);if(hov==null)draw()}
+ checkOrders();checkAlerts()},1000);
+// ===== fun: confetti + achievements =====
+function confetti(){try{const c=document.createElement('canvas');c.style.cssText='position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:60';document.body.append(c);c.width=innerWidth;c.height=innerHeight;const g=c.getContext('2d'),cols=['#c9ccd1','#2fd68b','#e8c15a','#ffffff','#7aa8ff'],ps=Array.from({length:90},()=>({x:Math.random()*c.width,y:-20-Math.random()*c.height*.4,vx:(Math.random()-.5)*3,vy:2+Math.random()*4,s:4+Math.random()*5,r:Math.random()*6,c:cols[Math.floor(Math.random()*5)]}));let f=0;(function a(){g.clearRect(0,0,c.width,c.height);ps.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.r+=.1;g.save();g.translate(p.x,p.y);g.rotate(p.r);g.fillStyle=p.c;g.fillRect(-p.s/2,-p.s/2,p.s,p.s*.6);g.restore()});if(++f<110)requestAnimationFrame(a);else c.remove()})()}catch(e){}try{navigator.vibrate&&navigator.vibrate(15)}catch(e){}}
+function achieve(){const tx=myTx(),trades=tx.filter(t=>t.kind==='trade'),sent=tx.filter(t=>t.kind==='p2p'&&t.from===me).length,pl=Object.entries(HOLD[me]||{}).reduce((s,[k,x])=>s+(x.q>0?x.q*P(k)-x.cost:0),0),goal=pockets(me).some(p=>p.goal>0&&pkBal(me,p.id)>=p.goal),
+ A=[['First send','Send money to a friend',sent,1,'send'],['Card collector','Own 3 cards',U().cards.length,3,'card'],['Goal getter','Fill a pocket to its goal',goal?1:0,1,'pocket'],['First trade','Place your first trade',trades.length,1,'chart'],['Active trader','Make 10 trades',trades.length,10,'trend'],['In the green','Hold a profitable position',pl>0?1:0,1,'up'],['R10k club','Reach R10,000 net worth',netWorth(me),1e4,'star'],['Big spender','Make 10 card payments',tx.filter(t=>t.kind==='pay').length,10,'bag'],['Reward hunter','Redeem a reward',S.redeem.filter(r=>r.user===me).length,1,'gift'],['Order pro','Place a limit or stop order',myOrders().length,1,'list']],done=A.filter(a=>a[2]>=a[3]).length;
+ shell('Achievements',`<div class="promo" style="cursor:default"><div class="mut">Unlocked</div><div class="big">${done} / ${A.length}</div><div class="bar"><i style="width:${done/A.length*100}%"></i></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px">${A.map(([t,d,v,g,i])=>{const ok=v>=g;return`<div class="card" style="margin:0;${ok?'border-color:#3a6d57;background:linear-gradient(145deg,#12221b,#0d0d0e)':''}"><div class="ico" style="${ok?'background:#2fd68b22;color:var(--up);border-color:#2f6d54':''}">${ic(ok?'check':i,18)}</div><div class="b" style="margin-top:10px">${t}</div><div class="mut" style="font-size:12px">${d}</div><div class="bar"><i style="width:${Math.min(100,v/g*100)}%"></i></div></div>`}).join('')}</div>`)}
+
+// ===== menu pages =====
+const pts=u=>S.pts.filter(p=>p.user===u).reduce((s,p)=>s+p.n,0)-S.redeem.filter(r=>r.user===u).reduce((s,r)=>s+r.cost,0);
+const catOpts=['Shopping','Food','Transport','Fuel','Entertainment','Other'].map(c=>`<option>${c}</option>`).join('');
+function menu(){const u=U(),rows=[['profile','user','My profile & security'],['notif','bell','Notifications'],['rewards','gift','Rewards · '+pts(me)+' pts'],['achieve','star','Achievements'],['lifestyle','star','Lifestyle'],['applyP','file','Products & apply'],['wealth','pie','Wealth tools'],['docs','file','Documents'],['myreq','help','My requests'],['contactP','help','Contact us'],['about','shield','About FCI']];
+ return`<div class="row"><h2>Menu</h2>${bellBtn()}</div><div class="card row l" onclick="go('profile')" style="cursor:pointer">${avatar(u.name,54)}<div class="m" style="flex:1"><div class="b" style="font-size:17px">${esc(u.name+' '+(u.surname||''))}</div><div class="mut">@${me} · ${u.type}</div></div>${ic('chev')}</div>
+<div class="card" style="padding:4px 16px">${rows.map(([g,i,t])=>`<div class="li" onclick="${g==='applyP'||g==='contactP'?g+'()':g==='notif'?'openNotif()':`go('${g}')`}"><div class="ico">${ic(i,18)}</div><div class="m"><div>${t}</div></div>${ic('chev')}</div>`).join('')}</div><button class="btn bad" onclick="logout()">LOG OUT</button>`}
+function profile(){const u=U();shell('Profile',`<div class="c" style="margin:10px 0 18px">${avatar(u.name,80).replace('margin:0','margin:0 auto')}<h2 style="margin-top:10px">${esc(u.name+' '+(u.surname||''))}</h2><div class="mut">@${me}</div></div><div class="card">${[['Account number',u.acct],['Account type',u.type],['Joined',new Date(u.joined).toLocaleDateString()],['Cards',u.cards.length]].map(([a,b])=>`<div class="rowk"><span>${a}</span><span>${esc(b)}</span></div>`).join('')}</div>
+<h3>Change PIN</h3><input id="op" type="password" inputmode="numeric" maxlength="4" placeholder="Current PIN"><input id="np" type="password" inputmode="numeric" maxlength="4" placeholder="New PIN"><button class="btn pri" onclick="chPin()">CHANGE PIN</button>`)}
+async function chPin(){let d=null;try{d=(await DB.doc('users/'+me).get()).data()}catch(e){}if(!d||d.pin!==await hash(me,$('#op').value)||!/^\d{4}$/.test($('#np').value))return toast('Check your current and new PIN.');await DB.doc('users/'+me).update({pin:await hash(me,$('#np').value)});notify(me,'Security alert','Your PIN was changed.','shield');toast('PIN changed');pop()}
+const REW=[['Food voucher',200],['Fuel voucher',400],['Cinema night',300],['Shopping voucher',600]];
+function rewards(){shell('Rewards',`<div class="promo"><div class="mut">Your points</div><div class="big">${pts(me)}</div><div class="mut">Awarded by FCI</div></div><h3>Available rewards</h3><div class="card" style="padding:4px 16px">${REW.map(([n,p])=>`<div class="li" style="cursor:default"><div class="ico">${ic('gift',18)}</div><div class="m"><div>${n}</div><div class="mut">${p} pts</div></div><button class="btn sm pri" style="margin:0" onclick="redeem('${n}',${p})">Redeem</button></div>`).join('')}</div><h3>History</h3>${[...S.pts.filter(p=>p.user===me).map(p=>[p.at,p.reason||'Reward',p.n]),...S.redeem.filter(r=>r.user===me).map(r=>[r.at,'Redeemed '+r.item,-r.cost])].sort((a,b)=>b[0]-a[0]).map(([a,t,n])=>`<div class="li" style="cursor:default"><div class="m"><div>${esc(t)}</div><div class="mut">${fmt(a)}</div></div><b class="${n>=0?'up':'dn'}">${n>0?'+':''}${n}</b></div>`).join('')||'<p class="mut">No rewards activity yet.</p>'}`)}
+async function redeem(n,p){if(pts(me)<p)return toast('Not enough points.');if(await put('redeem',{user:me,item:n,cost:p,at:Date.now()})){notify(me,'Reward redeemed',n,'gift');toast('Redeemed '+n)}}
+function lifestyle(){shell('Lifestyle',[['Food','Weekend dining offers'],['Shopping','Retail vouchers'],['Travel','Getaway deals'],['Entertainment','Cinema and events'],['Products','Gadgets and gear']].map(([a,b])=>`<div class="promo" style="margin:10px 0"><div class="serif" style="font-size:24px">${a}</div><div class="mut">${b}</div></div>`).join('')+`<button class="btn pri" onclick="go('buy')">BUY VOUCHERS</button>`)}
+function wealth(){shell('Wealth tools',`<h3>Personal loan</h3><div class="card"><label>Amount (R)</label><input id="la" type="text" inputmode="decimal" value="10000"><label>Months</label><input id="lm" type="text" inputmode="numeric" value="12"><label>Annual rate %</label><input id="lr" type="text" inputmode="decimal" value="14"><button class="btn" onclick="calc()">CALCULATE</button><div id="lo" class="mut">Results appear here.</div></div>
+<h3>Compound growth</h3><div class="card"><label>Start (R)</label><input id="ga" type="text" inputmode="decimal" value="1000"><label>Monthly deposit (R)</label><input id="gm" type="text" inputmode="decimal" value="500"><label>Years</label><input id="gy" type="text" inputmode="numeric" value="5"><label>Annual return %</label><input id="gr" type="text" inputmode="decimal" value="8"><button class="btn" onclick="growth()">CALCULATE</button><div id="go" class="mut">Results appear here.</div></div><p class="mut c">Estimates for practice only.</p>`)}
+function calc(){const a=num($('#la').value),n=num($('#lm').value),r=num($('#lr').value)/1200,m=r?a*r/(1-Math.pow(1+r,-n)):a/n;$('#lo').innerHTML=`Monthly: <b style="color:#fff">${R(m)}</b><br>Total: ${R(m*n)}<br>Interest: ${R(m*n-a)}`}
+function growth(){let v=num($('#ga').value);const m=num($('#gm').value),r=num($('#gr').value)/1200,n=num($('#gy').value)*12;let put_=v;for(let i=0;i<n;i++){v=v*(1+r)+m;put_+=m}$('#go').innerHTML=`Final value: <b style="color:#fff">${R(v)}</b><br>You put in: ${R(put_)}<br>Growth: ${R(v-put_)}`}
+function myreq(){const mine=S.apps.filter(a=>a.user===me),tk=S.tickets.filter(t=>t.user===me);shell('My requests',`<h3>Applications</h3>${mine.map(a=>`<div class="li" style="cursor:default"><div class="m"><div>${a.prod}</div><div class="mut">${fmt(a.at)}</div></div><span class="pill">${S.appSt[a.id]?.st||'Submitted'}</span></div>`).join('')||'<p class="mut">None yet.</p>'}<h3>Support tickets</h3>${tk.map(t=>{const rp=S.replies.filter(r=>r.ticket===t.id).sort((a,b)=>a.at-b.at);return`<div class="card"><div class="row"><b>${esc(t.sub)}</b><span class="pill">${rp.length?rp[rp.length-1].st||'In Progress':'Open'}</span></div><div class="mut">${esc(t.msg)}</div>${rp.map(r=>`<div style="margin-top:8px"><span class="mut">FCI:</span> ${esc(r.text)}</div>`).join('')}</div>`}).join('')||'<p class="mut">None yet.</p>'}`)}
+function about(){shell('About FCI',`<div class="c" style="margin:20px 0"><div class="logo" style="justify-content:center;font-size:44px">${logoSvg(40)}FCI</div><div class="mut" style="letter-spacing:.4em;font-size:10px">FIRST CAPITAL INTERACTIVE</div></div><div class="card"><p>FCI Bank is a private banking simulator for friends. Balances, cards and markets are fictional, and nothing here is a real financial service.</p><p class="mut" style="margin-top:8px">Version 65.0 · © FCI BANK</p></div>`)}
+function logout(){me=null;stack=[];welcome()}
+const PG={achieve,notif,receipt,docs,pocketnew,send,payf,transfer,add,buy,scheduled,cardd,cardnew,sym,order,profile,rewards,lifestyle,wealth,about,myreq,applyf,ticketf};
+// ===== session =====
+setInterval(()=>{if(!me)return;const t=S.set.timeout*1000,i=Date.now()-lastAct;
+ if(i>=t){me=null;stack=[];closeSheet(true);loginV('Session expired. Please log in again.')}
+ else if(i>t-30000&&!$('#sw'))sheet('<div id="sw"><h2>Your session is about to expire.</h2><button class="btn pri" onclick="lastAct=Date.now();closeSheet()">CONTINUE SESSION</button></div>',true)},1000);
+['click','keydown','touchstart'].forEach(e=>addEventListener(e,()=>{if(!$('#sw'))lastAct=Date.now()},true));
+// ===== ADMIN DASHBOARD (separate route: #admin) =====
+Object.assign(I,{users:'M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM23 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8',list:'M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01',sliders:'M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6',dollar:'M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6',activity:'M22 12h-4l-3 9L9 3l-3 9H2',x:'M6 6l12 12M18 6L6 18',eye:'M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12zM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z',eyeoff:'M17.9 17.9A10.9 10.9 0 0 1 12 20C5 20 1 12 1 12a18.5 18.5 0 0 1 5.1-5.9M9.9 4.2A10.9 10.9 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.2 3.2M1 1l22 22',copy:'M9 9h11v11H9zM5 15H4V4h11v1'});
+let ap='overview',aq='',afilt='all',akind='all',atq='';
+const ticketSt=t=>{const r=S.replies.filter(x=>x.ticket===t.id).sort((a,b)=>b.at-a.at)[0];return r?.st||'Open'};
+const nm=k=>S.users[k]?(S.users[k].name+' '+(S.users[k].surname||'')).trim():k;
+const who=k=>!k?'—':S.users[k]?nm(k):k.startsWith('cc:')?'Credit card':k.startsWith('pk:')?'Pocket':k;
+const allTx=()=>[...S.ledger,...S.adm].sort((a,b)=>b.at-a.at);
+const days=n=>Array.from({length:n},(_,i)=>{const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()-(n-1)+i);return d}),sameDay=(t,d)=>new Date(t).toDateString()===d.toDateString();
+function bars(v,labs){const w=440,h=120,m=Math.max(1,...v),bw=w/v.length;return`<svg viewBox="0 0 ${w} ${h+18}" width="100%">${v.map((x,i)=>`<rect x="${i*bw+4}" y="${h-x/m*h}" width="${bw-8}" height="${Math.max(2,x/m*h)}" rx="3" fill="#c9ccd1" opacity=".85"/><text x="${i*bw+bw/2}" y="${h+13}" fill="#777" font-size="9" text-anchor="middle">${labs[i]}</text>`).join('')}</svg>`}
+function area(v,labs){const w=440,h=120,m=Math.max(1,...v),pts=v.map((x,i)=>[8+i/(v.length-1)*(w-16),h-4-x/m*(h-12)]),p=pts.map(q=>q.join(',')).join(' ');return`<svg viewBox="0 0 ${w} ${h+18}" width="100%"><defs><linearGradient id="ag" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c9ccd1" stop-opacity=".4"/><stop offset="1" stop-color="#c9ccd1" stop-opacity="0"/></linearGradient></defs><polygon points="8,${h} ${p} ${w-8},${h}" fill="url(#ag)"/><polyline points="${p}" fill="none" stroke="#c9ccd1" stroke-width="2" stroke-linejoin="round"/>${labs.map((l,i)=>i%2?'':`<text x="${pts[i][0]}" y="${h+13}" fill="#777" font-size="9" text-anchor="middle">${l}</text>`).join('')}</svg>`}
+const NAV=[['overview','activity','Overview'],['users','users','Users'],['txs','list','Transactions'],['funds','dollar','Funds'],['cards','card','Cards'],['apps','file','Applications'],['tickets','help','Support'],['rewards','gift','Rewards'],['settings','sliders','Settings'],['health','shield','Health'],['audit','lock','Audit log']];
+function admEnter(){me=null;stack=[];closeSheet(true);
+ if(!ADM){view='denied';render(`<div class="c" style="padding-top:90px"><div class="logo" style="justify-content:center;font-size:44px">${logoSvg(40)}FCI</div><h2 style="margin-top:28px">Administrator access required</h2><p class="mut">This area is only for the owner and editors of this page.</p><button class="btn pri" style="max-width:280px;margin:24px auto" onclick="location.hash=''">OPEN CLIENT APP</button></div>`);hideLoad();return}
+ view='admin';admin();hideLoad()}
+function admin(t){if(t){ap=t;aq=t==='users'?aq:''}view='admin';closeSheet(true);
+ const cnt={apps:S.apps.filter(a=>(S.appSt[a.id]?.st||'Submitted')==='Submitted').length,tickets:S.tickets.filter(x=>ticketSt(x)!=='Resolved').length};
+ const body=({overview:aOver,users:aUsers,txs:aTxs,funds:aFunds,cards:aCards,apps:aApps,tickets:aTickets,rewards:aRew,settings:aSet,health:aHealth,audit:aAudit})[ap]();
+ render(`<div class="A"><aside><div class="logo">${logoSvg(24)}FCI<span class="mut" style="font-size:10px;letter-spacing:.3em">ADMIN</span></div><nav>${NAV.map(([k,i,l])=>`<button class="${ap===k?'on':''}" onclick="admin('${k}')">${ic(i,18)}${l}${cnt[k]?`<span class="cnt">${cnt[k]}</span>`:''}</button>`).join('')}</nav><div style="margin-top:auto"><button class="btn" style="height:42px;margin:0" onclick="location.hash=''">${ic('out',16)} Client app</button></div></aside><main><div class="top"><h1>${NAV.find(n=>n[0]===ap)[2]}</h1><input placeholder="Search users…" value="${esc(aq)}" oninput="aSearch(this.value)"></div>${body}</main></div>`,true)}
+function aSearch(v){aq=v;clearTimeout(window.sq);window.sq=setTimeout(()=>{ap='users';dirty=false;admin();const i=document.querySelector('.A .top input');i.focus();i.setSelectionRange(99,99)},300)}
+const kpi=(l,v,s)=>`<div class="kpi"><div class="mut">${l}</div><div class="v">${v}</div>${s?`<div class="mut" style="font-size:11px">${s}</div>`:''}</div>`;
+function modal(h){sheet(h,true);$('#sh').classList.add('mod')}
+const mhead=(t,s)=>`<div class="row" style="margin-bottom:14px"><div><b style="font-size:18px">${t}</b>${s?`<div class="mut">${s}</div>`:''}</div><button class="eye" onclick="closeSheet()" aria-label="Close">${ic('x',18)}</button></div>`;
+function aOver(){const us=Object.keys(S.users),tx=allTx(),d=days(14),lab=d.map(x=>x.getDate()),act=us.filter(k=>(S.users[k].seen||0)>Date.now()-6048e5).length;
+ const txd=d.map(x=>tx.filter(t=>sameDay(t.at,x)).length),mon=d.map(x=>tx.filter(t=>sameDay(t.at,x)&&t.kind!=='pocket').reduce((s,t)=>s+t.amt,0)),gro=d.map(x=>us.filter(k=>S.users[k].joined<=x.getTime()+864e5-1).length),dau=d.map(x=>us.filter(k=>sameDay(S.users[k].seen||0,x)||tx.some(t=>sameDay(t.at,x)&&(t.from===k||t.to===k))).length);
+ return`<div class="kpis">${kpi('Total users',us.length)}${kpi('Active users','',null).replace('<div class="v"></div>',`<div class="v">${act}</div>`)}${kpi('Total funds',R(us.reduce((s,k)=>s+bal(k)+pkTotal(k),0)),'Main + pockets')}${kpi('Invested',R(us.reduce((s,k)=>s+holdVal(k),0)))}${kpi('Transactions',tx.length)}${kpi('Pending applications',S.apps.filter(a=>(S.appSt[a.id]?.st||'Submitted')==='Submitted').length)}${kpi('Open tickets',S.tickets.filter(x=>ticketSt(x)!=='Resolved').length)}</div>
+<div class="g2"><div class="card"><div class="mut">Transaction activity · 14 days</div>${bars(txd,lab)}</div><div class="card"><div class="mut">Money circulation · 14 days</div>${area(mon,lab)}</div><div class="card"><div class="mut">User growth</div>${area(gro,lab)}</div><div class="card"><div class="mut">Daily active users</div>${bars(dau,lab)}</div></div>
+<div class="g2" style="margin-top:14px"><div class="card"><div class="mut" style="margin-bottom:6px">Top balances</div>${us.sort((a,b)=>bal(b)-bal(a)).slice(0,6).map(k=>`<div class="rowk"><span>${esc(nm(k))}</span><b>${R(bal(k))}</b></div>`).join('')||'<p class="mut">No users yet.</p>'}</div><div class="card"><div class="mut" style="margin-bottom:6px">Recent activity</div>${tx.slice(0,7).map(t=>`<div class="rowk"><span>${esc(who(t.from))} → ${esc(who(t.to))}<br><span style="font-size:11px">${fmt(t.at)}</span></span><b>${R(t.amt)}</b></div>`).join('')||'<p class="mut">Nothing yet.</p>'}</div></div>`}
+function aUsers(){const l=Object.entries(S.users).filter(([k,u])=>(afilt==='all'||stOf(k)===afilt)&&(k+nm(k)+u.acct).toLowerCase().includes(aq.toLowerCase())).sort((a,b)=>b[1].joined-a[1].joined);
+ return`<div class="chips">${['all','active','suspended'].map(f=>`<button class="${afilt===f?'on':''}" onclick="afilt='${f}';admin()">${f[0].toUpperCase()+f.slice(1)}</button>`).join('')}</div><div class="tw"><table class="tbl"><tr><th>Name</th><th>Username</th><th>Account</th><th>Type</th><th>Balance</th><th>Registered</th><th>Status</th></tr>${l.map(([k,u])=>`<tr class="k" onclick="aUser('${k}')"><td><b>${esc(nm(k))}</b></td><td>@${k}</td><td>${u.acct}</td><td>${u.type}</td><td>${R(bal(k))}</td><td>${new Date(u.joined).toLocaleDateString()}</td><td><span class="st ${stOf(k)==='active'?'ok':'no'}">${stOf(k)}</span></td></tr>`).join('')||'<tr><td colspan="7" class="mut">No users found.</td></tr>'}</table></div>`}
+function aUser(k){const u=S.users[k];if(!u)return;modal(`${mhead(esc(nm(k)),'@'+k+' · '+u.acct+' · '+u.type)}<div class="kpis">${kpi('Balance',R(bal(k)))}${kpi('Pockets',R(pkTotal(k)))}${kpi('Investments',R(holdVal(k)))}${kpi('Points',pts(k))}</div>
+<div class="btn-row" style="grid-template-columns:repeat(auto-fit,minmax(130px,1fr))"><button class="btn up sm" style="height:42px" onclick="fundModal('${k}','add')">Add funds</button><button class="btn dn sm" style="height:42px" onclick="fundModal('${k}','rem')">Remove funds</button><button class="btn sm" style="height:42px" onclick="ptsModal('${k}')">Award points</button><button class="btn sm" style="height:42px" onclick="pinModal('${k}')">Reset PIN</button><button class="btn sm ${stOf(k)==='active'?'bad':'pri'}" style="height:42px" onclick="aStatus('${k}')">${stOf(k)==='active'?'Suspend':'Activate'}</button></div>
+<h3>Cards</h3>${(u.cards||[]).map(c=>`<div class="rowk"><span>${esc(c.nick)} •••• ${c.num.slice(-4)} · ${c.type} · ${c.style}</span><span class="st ${c.st==='Active'?'ok':'wa'}">${c.st}</span></div>`).join('')}
+<h3>Pockets</h3>${pockets(k).map(p=>`<div class="rowk"><span>${esc(p.name)}</span><span>${R(pkBal(k,p.id))} / ${R(p.goal)}</span></div>`).join('')||'<p class="mut">None.</p>'}
+<h3>Recent transactions</h3>${allTx().filter(t=>t.from===k||t.to===k).slice(0,8).map(t=>`<div class="rowk"><span>${esc(t.desc)}<br><span style="font-size:11px">${fmt(t.at)}</span></span><span>${t.to===k?'+':'-'}${R(t.amt)}</span></div>`).join('')||'<p class="mut">None.</p>'}`)}
+const catSel=`<select id="fc">${catOpts}</select>`;
+function fundFields(){return`<div class="fgrid"><div><label>Amount (R)</label><input id="fa" type="text" inputmode="decimal" placeholder="0.00"></div><div><label>Category</label>${catSel}</div><div class="full"><label>Description</label><input id="fd" placeholder="e.g. McDonald's"></div><div><label>Source / sender</label><input id="fs" value="FCI"></div><div><label>Reference</label><input id="fr"></div><div class="full"><label>Notes (admin only)</label><input id="fn"></div></div>`}
+function fundModal(k,m){modal(`${mhead((m==='add'?'Add funds':'Remove funds')+' · '+esc(nm(k)),'Logged in the audit trail')}${fundFields()}<button class="btn ${m==='add'?'up':'dn'}" onclick="fundDo('${k}',${m==='add'})">${m==='add'?'ADD FUNDS':'REMOVE FUNDS'}</button>`)}
+async function fundDo(k,add){const a=num($('#fa').value),d=$('#fd').value.trim()||'FCI adjustment',base={amt:a,desc:d,cat:$('#fc').value,ref:$('#fr').value,source:$('#fs').value,payee:$('#fs').value,note:$('#fn').value,adm:true};
+ const t=await post(add?{...base,from:null,to:k,kind:'deposit'}:{...base,from:k,to:null,kind:'withdrawal'});if(typeof t==='string')return toast(t);
+ if(!add)notify(k,'Funds removed',`${R(a)} · ${d}`,'out');logA(`${add?'Added':'Removed'} ${R(a)} ${add?'to':'from'} @${k} (${t.id})`);toast('Transaction created');admin()}
+function ptsModal(k){modal(`${mhead('Award points · '+esc(nm(k)))}<label>Points (negative removes)</label><input id="rwn" type="text" inputmode="numeric" value="100"><label>Reason</label><input id="rwr" value="Reward from FCI"><button class="btn pri" onclick="ptsDo('${k}')">CONFIRM</button>`)}
+async function ptsDo(k){const n=parseInt($('#rwn').value);if(!n)return toast('Enter points.');await put('points',{user:k,n,reason:$('#rwr').value,at:Date.now()});notify(k,'Reward received',n+' points','gift');logA(`Points ${n} for @${k}`);toast('Done');admin()}
+function pinModal(k){modal(`${mhead('Reset PIN · '+esc(nm(k)))}<label>New 4-digit PIN</label><input id="np2" type="password" inputmode="numeric" maxlength="4"><button class="btn pri" onclick="pinDo('${k}')">RESET PIN</button>`)}
+async function pinDo(k){const p=$('#np2').value;if(!/^\d{4}$/.test(p))return toast('Enter 4 digits.');await DB.doc('users/'+k).update({pin:await hash(k,p)});notify(k,'Security alert','Your PIN was reset by an administrator.','shield');logA('PIN reset for @'+k);toast('PIN reset');closeSheet()}
+async function aStatus(k){const s=stOf(k)==='active'?'suspended':'active';await put('userStatus',{st:s},k);notify(k,'Security alert','Your account is now '+s,'shield');logA(`Status of @${k} set to ${s}`);admin()}
+function aTxs(){const rev=new Set(S.adm.filter(x=>x.rev).map(x=>x.rev));let l=allTx().filter(t=>akind==='all'||t.kind===akind);if(atq)l=l.filter(t=>(t.id+t.desc+who(t.from)+who(t.to)).toLowerCase().includes(atq.toLowerCase()));
+ return`<div class="row l" style="gap:10px;margin-bottom:12px;flex-wrap:wrap"><input placeholder="Search transactions" value="${esc(atq)}" style="width:280px;margin:0;height:44px" oninput="atq=this.value;clearTimeout(window.tq);window.tq=setTimeout(()=>{dirty=false;admin();const i=document.querySelector('main .row input');i.focus();i.setSelectionRange(99,99)},300)"><select style="width:180px;margin:0;height:44px" onchange="akind=this.value;admin()">${['all','p2p','pay','deposit','withdrawal','advance','repay','trade','pocket','reversal'].map(k=>`<option value="${k}" ${akind===k?'selected':''}>${k==='all'?'All types':k}</option>`).join('')}</select><span class="mut">${l.length} entries</span></div>
+<div class="tw"><table class="tbl"><tr><th>Date</th><th>ID</th><th>From</th><th>To</th><th>Amount</th><th>Type</th><th>Description</th><th>Status</th><th></th></tr>${l.slice(0,150).map(t=>`<tr><td>${fmt(t.at)}</td><td>${t.id}</td><td>${esc(who(t.from))}</td><td>${esc(who(t.to))}</td><td><b>${R(t.amt)}</b></td><td>${t.kind}${t.adm?' · admin':''}</td><td>${esc(t.desc)}</td><td><span class="st ${rev.has(t.id)?'wa':'ok'}">${rev.has(t.id)?'Reversed':'Completed'}</span></td><td>${t.kind==='trade'||t.kind==='reversal'||rev.has(t.id)?'':`<button class="btn sm" onclick="sure('Reverse this transaction? A reversal entry is added.',()=>aRev('${t.id}'),'REVERSE',1)">Reverse</button>`}</td></tr>`).join('')||'<tr><td colspan="9" class="mut">No transactions.</td></tr>'}</table></div>`}
+async function aRev(i){const t=allTx().find(x=>x.id===i);if(t.to&&S.users[t.to]&&bal(t.to)<t.amt)return toast('Recipient has insufficient funds to reverse.');
+ const r=await post({from:t.to||null,to:t.from||null,amt:t.amt,desc:'Reversal of '+t.id,cat:'Reversal',ref:t.id,kind:'reversal',rev:t.id,adm:true,source:'FCI',payee:'FCI'});if(typeof r==='string')return toast(r);logA('Reversed '+i);[t.from,t.to].forEach(x=>S.users[x]&&notify(x,'Transaction reversed',t.id,'swap'));admin()}
+function aFunds(){const us=Object.entries(S.users),opt=us.map(([k])=>`<option value="${k}">${esc(nm(k))} (@${k})</option>`).join('');
+ return`<div class="g2"><div class="card"><h3 style="margin-top:0">Create transaction</h3><label>User</label><select id="fu">${opt}</select><label>Action</label><select id="fk"><option value="add">Add funds (deposit)</option><option value="rem">Remove funds (withdrawal)</option></select>${fundFields()}<button class="btn pri" onclick="fundDo($('#fu').value,$('#fk').value==='add')">CREATE TRANSACTION</button></div>
+<div class="card"><h3 style="margin-top:0">Send between users</h3><label>From</label><select id="tf1">${opt}</select><label>To</label><select id="tf2">${opt}</select><label>Amount (R)</label><input id="tfa" type="text" inputmode="decimal"><label>Description</label><input id="tfd"><button class="btn pri" onclick="aTransfer()">SEND</button><p class="mut">Reversals and corrections are always new entries; history is never edited.</p></div></div>`}
+async function aTransfer(){const f=$('#tf1').value,t=$('#tf2').value;if(!f||!t||f===t)return toast('Pick two different users.');const r=await post({from:f,to:t,amt:num($('#tfa').value),desc:$('#tfd').value||'Transfer',cat:'Transfer',ref:'Admin',kind:'p2p',adm:true});if(typeof r==='string')return toast(r);logA(`Transfer ${R(r.amt)} @${f} → @${t}`);toast('Sent');admin()}
+function aCards(){const rows=[];Object.entries(S.users).forEach(([k,u])=>(u.cards||[]).forEach(c=>rows.push([k,c])));
+ return`<div class="tw"><table class="tbl"><tr><th>Holder</th><th>Card</th><th>Type</th><th>Design</th><th>Limit / credit</th><th>Status</th></tr>${rows.map(([k,c])=>`<tr><td>${esc(nm(k))}</td><td>${esc(c.nick)} •••• ${c.num.slice(-4)}</td><td>${c.type}</td><td>${c.style}</td><td>${c.type==='Credit'?R(-(B['cc:'+c.id]||0))+' of '+R(c.credit):R(c.limit||5000)}</td><td><select style="height:34px;margin:0;width:130px;padding:0 10px" onchange="aCardSt('${k}','${c.id}',this.value)">${['Active','Frozen','Blocked'].map(s=>`<option ${c.st===s?'selected':''}>${s}</option>`).join('')}</select></td></tr>`).join('')||'<tr><td colspan="6" class="mut">No cards.</td></tr>'}</table></div>`}
+async function aCardSt(k,cid,v){await DB.doc('users/'+k).update({cards:S.users[k].cards.map(c=>c.id===cid?{...c,st:v}:c)});notify(k,'Card '+v.toLowerCase(),'Your card is now '+v.toLowerCase(),'card');logA(`Card ${cid} of @${k} set to ${v}`);toast('Card '+v.toLowerCase())}
+function aApps(){return`<div class="tw"><table class="tbl"><tr><th>Date</th><th>Applicant</th><th>Product</th><th>Category</th><th>Details</th><th>Status</th></tr>${S.apps.map(a=>`<tr><td>${fmt(a.at)}</td><td>${esc(a.name)}${a.user?' · @'+a.user:''}</td><td>${a.prod}</td><td>${a.cat}</td><td style="white-space:normal;max-width:260px">${esc(a.opt)} ${esc(a.note)}</td><td><select style="height:34px;margin:0;width:150px;padding:0 10px" onchange="aApp('${a.id}',this.value)">${['Submitted','Under Review','Approved','Declined'].map(s=>`<option ${(S.appSt[a.id]?.st||'Submitted')===s?'selected':''}>${s}</option>`).join('')}</select></td></tr>`).join('')||'<tr><td colspan="6" class="mut">No applications.</td></tr>'}</table></div>`}
+async function aApp(i,s){const a=S.apps.find(x=>x.id===i);await put('appStatus',{st:s},i);if(a.user)notify(a.user,'Application '+s.toLowerCase(),a.prod,'file');logA(`Application ${i} set to ${s}`);toast('Updated')}
+function aTickets(){return S.tickets.map(t=>`<div class="card"><div class="row"><div><b>${esc(t.sub)}</b><div class="mut">${t.cat} · ${t.user?'@'+t.user:'guest'} · ${fmt(t.at)}</div></div><span class="st ${ticketSt(t)==='Resolved'?'ok':ticketSt(t)==='Open'?'wa':''}">${ticketSt(t)}</span></div><p style="margin:10px 0">${esc(t.msg)}</p>${S.replies.filter(r=>r.ticket===t.id).sort((a,b)=>a.at-b.at).map(r=>`<div class="mut" style="margin:4px 0">FCI: ${esc(r.text)}</div>`).join('')}<div class="row l" style="margin-top:10px"><button class="btn sm pri" onclick="ask('Reply to ticket','Message','',r=>aReply('${t.id}',r))">Reply</button><button class="btn sm" onclick="aTk('${t.id}','In Progress')">In progress</button><button class="btn sm" onclick="aTk('${t.id}','Resolved')">Resolve</button></div></div>`).join('')||'<div class="card mut c">No support tickets.</div>'}
+async function aReply(i,r){if(!r.trim())return;await put('replies',{ticket:i,text:r,st:'In Progress',at:Date.now()});const t=S.tickets.find(x=>x.id===i);if(t.user)notify(t.user,'Support response',t.sub,'help');logA('Replied to '+i)}
+async function aTk(i,s){await put('replies',{ticket:i,text:'Status: '+s,st:s,at:Date.now()});const t=S.tickets.find(x=>x.id===i);if(t.user)notify(t.user,'Support update',t.sub+' is '+s.toLowerCase(),'help')}
+function aRew(){const us=Object.keys(S.users);return`<div class="g2"><div class="card"><h3 style="margin-top:0">Award points</h3><label>User</label><select id="rwu">${us.map(k=>`<option value="${k}">${esc(nm(k))} · ${pts(k)} pts</option>`).join('')}</select><label>Points (negative removes)</label><input id="rwn" type="text" inputmode="numeric" value="100"><label>Reason</label><input id="rwr" value="Reward from FCI"><button class="btn pri" onclick="ptsDo($('#rwu').value)">AWARD</button></div>
+<div class="card"><h3 style="margin-top:0">Reward catalogue</h3>${REW.map(([n,p])=>`<div class="rowk"><span>${n}</span><b>${p} pts</b></div>`).join('')}<h3>Recent redemptions</h3>${S.redeem.slice(0,6).map(r=>`<div class="rowk"><span>${esc(nm(r.user))} · ${esc(r.item)}</span><span>-${r.cost}</span></div>`).join('')||'<p class="mut">None yet.</p>'}</div></div>`}
+function aSet(){const s=S.set;return`<div class="card" style="max-width:640px"><div class="fgrid"><div><label>Session timeout (seconds)</label><input id="sto" type="text" inputmode="numeric" value="${s.timeout}"></div><div><label>Registration</label><select id="sre"><option value="1" ${s.reg?'selected':''}>Open</option><option value="0" ${s.reg?'':'selected'}>Closed</option></select></div><div><label>Users can add money to themselves</label><select id="ssd"><option value="1" ${s.selfDep?'selected':''}>Yes</option><option value="0" ${s.selfDep?'':'selected'}>No</option></select></div><div><label>Maintenance mode</label><select id="smt"><option value="0" ${s.maint?'':'selected'}>Off</option><option value="1" ${s.maint?'selected':''}>On (clients locked out)</option></select></div><div><label>Per-transaction limit (R)</label><input id="smx" type="text" inputmode="decimal" value="${s.maxTx}"></div><div><label>Daily spending limit (R)</label><input id="sdl" type="text" inputmode="decimal" value="${s.dailyLimit}"></div></div><button class="btn pri" onclick="aSetSave()">SAVE SETTINGS</button></div>`}
+async function aSetSave(){await put('settings',{timeout:Math.max(30,num($('#sto').value)||300),reg:$('#sre').value==='1',selfDep:$('#ssd').value==='1',maint:$('#smt').value==='1',maxTx:num($('#smx').value)||100000,dailyLimit:num($('#sdl').value)||250000},'main');logA('Settings changed');toast('Settings saved')}
+function aHealth(){const us=Object.keys(S.users),neg=us.filter(k=>bal(k)<0),cc=[];us.forEach(k=>(S.users[k].cards||[]).forEach(c=>{if(c.type==='Credit'&&avail('cc:'+c.id)<0)cc.push([k,c])}));const ids=allTx().map(t=>t.id),dup=ids.length-new Set(ids).size,orph=allTx().filter(t=>(t.from&&!S.users[t.from]&&!/^(cc:|pk:|MARKET)/.test(t.from))||(t.to&&!S.users[t.to]&&!/^(cc:|pk:|MARKET)/.test(t.to))).length;
+ const ck=(ok,t,d)=>`<div class="rowk"><span>${t}<br><span style="font-size:11px">${d}</span></span><span class="st ${ok?'ok':'no'}">${ok?'OK':'Issue'}</span></div>`;
+ return`<div class="g2"><div class="card"><h3 style="margin-top:0">Ledger integrity</h3>${ck(!neg.length,'No negative balances',neg.length?neg.map(k=>nm(k)+' '+R(bal(k))).join(', '):'All balances are zero or above')}${ck(!cc.length,'Credit cards within limit',cc.length?cc.length+' over limit':'All within limit')}${ck(!dup,'No duplicate transaction IDs',dup+' duplicates')}${ck(!orph,'All entries reference known accounts',orph+' unknown references')}${neg.length?`<button class="btn" onclick="sure('Add corrective deposits to bring negative balances to zero?',aFixNeg,'FIX BALANCES')">FIX NEGATIVE BALANCES</button>`:''}</div>
+<div class="card"><h3 style="margin-top:0">System</h3><div class="rowk"><span>Users</span><span>${us.length}</span></div><div class="rowk"><span>Ledger entries</span><span>${S.ledger.length}</span></div><div class="rowk"><span>Admin entries</span><span>${S.adm.length}</span></div><div class="rowk"><span>Audit entries</span><span>${S.audit.length}</span></div><div class="rowk"><span>Write protection</span><span>Per-account lock + retry</span></div></div></div>`}
+async function aFixNeg(){for(const k of Object.keys(S.users).filter(k=>bal(k)<0)){const r=await post({from:null,to:k,amt:-bal(k),desc:'Balance correction',cat:'Adjustment',kind:'deposit',adm:true,source:'FCI'});if(typeof r!=='string')logA('Corrected negative balance for @'+k)}toast('Done')}
+function aAudit(){return`<div class="tw"><table class="tbl"><tr><th>Time</th><th>Action</th></tr>${S.audit.map(a=>`<tr><td>${fmt(a.at)}</td><td style="white-space:normal">${esc(a.a)}</td></tr>`).join('')||'<tr><td colspan="2" class="mut">No entries yet.</td></tr>'}</table></div>`}
+init();
+</script></body></html>
